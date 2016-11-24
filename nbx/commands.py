@@ -67,7 +67,7 @@ def createuser(username, password, email, role):
     db.session.add(user)
     db.session.commit()
 
-    click.echo("User created with ID", user.id)
+    click.echo("User created with ID {}".format(user.id))
 
 
 @app.cli.command()
