@@ -13,12 +13,12 @@ from webassets.filter import get_filter
 
 from nbx.views import supplier, product, order, account
 from nbx.models import db, User
-import nbx.scssfilter # webassets filter
 from nbx.jinjafilters import dateformat_filter, timeago_filter, moneyfmt_filter
 
 __all__ = ['create_app']
 
 DEFAULT_APPNAME = 'nbx'
+
 
 def create_app(config=None, app_name=None):
 
@@ -83,7 +83,7 @@ def configure_webassets(app):
     # webassets bundles
 
     jquery_bundle = Bundle(
-        #'js/libs/jquery-1.7.js',
+        # 'js/libs/jquery-1.7.js',
         'js/libs/jquery-1.7.1.js',
         'js/libs/ui/jquery.ui.core.js',
         'js/libs/ui/jquery.ui.position.js',
@@ -135,7 +135,7 @@ def configure_webassets(app):
 
     css_bundle = Bundle(
         'css/reset.css',
-        #'css/jquery.ui.tabs.css',
+        # 'css/jquery.ui.tabs.css',
         'fonts/meta-web-pro.css',
         'fonts/droid.css',
         scss_bundle,
@@ -149,6 +149,7 @@ def configure_webassets(app):
 
 def configure_db(app):
     db.init_app(app)
+
 
 def configure_identity(app):
 
@@ -168,5 +169,3 @@ def configure_blueprints(app):
     app.register_blueprint(product, url_prefix='/products')
     app.register_blueprint(order, url_prefix='/orders')
     app.register_blueprint(account, url_prefix='/accounts')
-
-#import nbx.views
