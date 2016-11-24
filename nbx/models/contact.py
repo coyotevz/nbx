@@ -16,5 +16,5 @@ class Contact(Entity):
     suppliers = association_proxy('supplier_contacts', 'supplier')
 
     @property
-    def fullname(self):
+    def full_name(self):
         return u' '.join([self.first_name, self.last_name])
