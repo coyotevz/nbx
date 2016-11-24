@@ -23,7 +23,7 @@ def login():
 
             identity_changed.send(current_app._get_current_object(),
                                   identity=Identity(user.id))
-            flash("Welcome back, %(name)s" % {'name': user.username}, "success")
+            flash("Welcome back %(name)s" % {'name': user.first_name}, "success")
             next_url = form.next.data
 
             if not next_url or next_url == request.path:

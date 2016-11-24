@@ -7,8 +7,8 @@
   {% endif %}
   <ul>
     {% if g.user %}
-    <li>{{ g.user.first_name }}{% if g.user.last_name %}, {{ g.user.last_name }}{% endif %}</li>
-    <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
+    <li style="float: left;">{{ g.user.first_name }}{% if g.user.last_name %} {{ g.user.last_name }}{% endif %}</li>
+    <li style="float: right; margin-left: 5px;"><a href="{{ url_for('account.logout') }}">Logout</a></li>
     {% else %}
     <li><a href="{{ url_for('account.login', next=request.url) }}">Login</a></li> 
     {% endif %}
