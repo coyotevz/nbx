@@ -15,7 +15,7 @@
       {% for supplier in suppliers %}
       <tr class="">
         <td class="name">
-          <a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.fullname }}</a>
+          <a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.full_name }}</a>
         </td>
       </tr>
       {% endfor %}
