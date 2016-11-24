@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="info-wrapper clearfix">
+  <div class="descrow">
+    <h2>[{{ product.code }}] {{ product.description }}</h2>
+    {{ button('Editar', url_for('product.edit', product_id=product.id), style='small') }}
+  </div>
+</div>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

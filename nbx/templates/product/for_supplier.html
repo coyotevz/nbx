@@ -1,0 +1,42 @@
+{% from "macros.html" import form_button %}
+
+<div class="toolbar clearfix">
+  {{ form_button('Nuevo Producto', id='new-product') }}
+</div>
+<div class="products-tab">
+  <table class="list-browser" cellspacing="0" cellpadding="0">
+    {% for product_info in products_info %}
+    <tr>
+      <td class="supplier-code">{{ product_info.code }}</td>
+      <td class="supplier-description">{{ product_info.description }}</td>
+      <td class="base-cost">{{ product_info.base_cost|moneyfmt }}</td>
+    </tr>    
+    {% else %}
+    <tr><td class="void-list"><em>No hay productos asociados.</em></td></tr>
+    {% endfor %}
+  </table>
+</div>
+<script type="text/javascript" charset="utf-8">
+  var dialog = null;
+  $('#new-product').click(function() {
+    if (dialog) dialog.dialog('open');
+    else {
+      dialog = $('<div id="product-dialog"></div>')
+      .hide()
+      .load('{{ url_for('product.for_supplier_edit', supplier_id=supplier_id) }}', function() {
+        $(this).dialog('option', 'title', $(this).find('h2').remove().text());
+      })
+      .appendTo('body')
+      .dialog({
+        modal: true,
+        width: 660,
+        hide: 'fade',
+        show: 'fade',
+        title: '&lt;Sin título&gt;',
+      });
+    }
+    $('#code').focus();
+  });
+</script>
+{# vim:ft=xhtml.jinja:sw=2
+#}

@@ -1,0 +1,13 @@
+*.db
+*.swp
+*.pyc
+*.egg
+*.egg-info
+*.manifest
+*.so
+*.hg*
+
+nbx/static/assets/
+nbx/static/.webassets-cache
+
+localconfig.py

@@ -1,0 +1,11 @@
+Flask-Principal
+Flask-SQLAlchemy
+Flask-WTF
+
+# postgresql connector
+psycopg2
+
+# assets
+Flask-Assets
+jsmin
+cssmin

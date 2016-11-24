@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<h2>Products</h2>
+
+<div id="search-bar" class="clearfix">
+  <div class="search-wrapper">
+    <input id="product-search" class="autocomplete-input" type="text" name="q" placeholder="Buscar ..." />
+  </div>
+</div>
+
+<div id="main-list">
+  <div class="list-wrapper clearfix">
+    <table class="list-browser products-list" cellspacing="0" cellpadding="0">
+      {% for product in products %}
+      <tr class="">
+        <td class="code">
+          <a href="{{ url_for('.detail', product_id=product.id) }}">{{ product.code }}</a>
+        </td>
+        <td class="description">
+          {{ product.description }}
+        </td>
+        <td class="brand">
+          {{ product.brand|d('',true) }}
+        </td>
+        <td class="price">
+          {{ product.final_price }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

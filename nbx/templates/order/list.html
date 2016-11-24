@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<h2>Purchase Orders</h2>
+
+<div id="search-bar" class="clearfix">
+  <div class="search-wrapper">
+    <input id="product-search" class="autocomplete-input" type="text" name="q" placeholder="Buscar ..." />
+  </div>
+</div>
+
+<div id="main-list">
+  <div class="list-wrapper clearfix">
+    <table class="list-browser orders-list" cellspacing="0" cellpadding="0">
+      {% for order in orders %}
+      <tr class="{{ order.status_str.lower() }}">
+        <td class="po-number">
+          {{ order.number }}
+          {#<a href="{{ url_for('.detail', order_id=order.id) }}">{{ order.number }}</a>#}
+        </td>
+        <td class="po-supplier">
+          <a href="{{ url_for('supplier.detail', supplier_id=order.supplier_id) }}">{{ order.supplier.name }}</a>
+        </td>
+        <td class="po-open-date">
+          {{ order.open_date|dateformat }}
+        </td>
+        <td class="po-amount">
+          {{ order.amount|moneyfmt(curr='$ ') }}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td class="void-list"><em>No hay Ordenes de Compras creadas.</em></td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

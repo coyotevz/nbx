@@ -1,0 +1,65 @@
+@import "helpers";
+
+.ui-dialog {
+  position: absolute;
+  overflow: hidden;
+  @include box-shadow(#999, 0, 0, 2px, 1px);
+  @include border-radius(4px);
+  border: 1px solid #fff;
+  .ui-dialog-titlebar {
+    position: relative;
+    background-color: #ddd;
+    border-bottom: 1px solid #ccc;
+    .ui-dialog-title {
+      color: #333;
+      display: block;
+      padding: 6px (6+15)px 6px 6px;
+      font-weight: bold;
+      font-size: 16px;
+      @include text-shadow(#fff, 0, 1px, 0);
+    }
+    .ui-dialog-titlebar-close {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 15px;
+      height: 15px;
+      margin: -7px 8px 0 0;
+      text-indent: -999px;
+      background: url('../img/x_icon.png');
+      span { display: block; height: 15px; }
+      &:hover, &:focus { background-position: bottom left; }
+    }
+  }
+  .ui-dialog-content {
+    position: relative;
+    border: 0;
+    background-color: #efefef;
+    overflow: auto;
+    zoom: 1;
+    border-top: 1px solid #f9f9f9;
+  }
+  .ui-dialog-buttonpane {
+    text-align: left;
+    border-width: 1px 0 0 0;
+    background-image: none;
+    margin: 0.5em 0 0 0;
+    padding: 0.3em 1em 0.5em 0.4em;
+    .ui-dialog-buttonset { float: right; }
+    button { margin: 0.5em 0.4em 0.5em 0; cursor: pointer; }
+  }
+  form { 
+    background: none;
+    border: none;
+    @include box-shadow(none);
+  }
+}
+
+.ui-widget-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+}

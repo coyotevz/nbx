@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="info-wrapper clearfix">
+  <div class="namerow">
+    <h2>{{ supplier.name }}{% if supplier.fancy_name %}<span class="fancy">{{ supplier.fancy_name }}</span>{% endif %}</h2>
+    {{ button('Editar', url_for('supplier.edit', supplier_id=supplier.id), style="small") }}
+  </div>
+  <div class="addressrow">
+    {% with address = supplier.address.first() %}
+    {% if address %}<span class="address">{{ address.street }} {{ address.streetnumber }}, {{ address.city }}, {{ address.province }}</span>{% endif %}
+    {% endwith %}
+    <span class="cuit">{{ supplier.cuit }}</span>
+  </div>
+  <div class="supplier-info">
+    {% if supplier.phone.count() > 0 %}
+    <ul class="phones">
+      {% for phone in supplier.phone %}
+      <li class="phone-item"><b>{{ phone.phone_type }}:</b> {{ phone.number }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if supplier.email.count() > 0 %}
+    <ul class="emails">
+      {% for email in supplier.email %}
+      <li class="email-item"><b>{{ email.email_type }}:</b> {{ email.email }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+
+<div id="tabs">
+  <ul>
+    <li><a href="{{ url_for('product.for_supplier', supplier_id=supplier.id) }}">Productos</a></li>
+    <li><a href="{{ url_for('supplier.orders', supplier_id=supplier.id) }}">Pedidos</a></li>
+    <li><a href="{{ url_for('supplier.documents', supplier_id=supplier.id) }}">Facturas</a></li>
+    <li><a href="{{ url_for('supplier.contacts', supplier_id=supplier.id) }}">Contactos</a></li>
+    <li><a href="{{ url_for('supplier.bank_accounts', supplier_id=supplier.id) }}">Bancos</a></li>
+    <li><a href="{{ url_for('supplier.comments', supplier_id=supplier.id) }}">Comentarios</a></li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  var spinner_timer = null;
+  $('#tabs').tabs({
+      cookie: { expire: 1 },
+      create: function(event, ui) { $('<div id="ajax-spinner"></div>').appendTo('#tabs'); },
+      select: function(event, ui) {
+        $('.ui-tabs-panel').children().hide();
+        if (spinner_timer != null) clearTimeout(spinner_timer);
+        spinner_timer = setTimeout(function() {
+          $('#ajax-spinner').fadeIn('fast');
+        }, 100);
+      },
+      load: function(event, ui) {
+        clearTimeout(spinner_timer);
+        $('.ui-tabs-panel').children().show();
+        $('#ajax-spinner').fadeOut('fast');
+      }
+  });
+
+  var resize_panel = function() {
+    var h = $('header').outerHeight(true) +
+            $('div.info-wrapper').outerHeight(true) +
+            $('ul.ui-tabs-nav').outerHeight(true) +
+            $('footer').outerHeight(true) +
+            25;
+    var wh = $(window).innerHeight();
+    $panel = $('.ui-tabs-panel');
+    $panel.height(wh-h);
+    $spinner = $('#ajax-spinner');
+    $spinner.toggle();
+    $spinner.css({
+      top: (($panel.outerHeight(true)+$('.ui-tabs-nav').outerHeight(true))/2)-($spinner.outerHeight(true)/2),
+      /*left: ($panel.outerWidth(true)/2)-($spinner.outerWidth(true)/2),*/
+      left: 330,
+      position: 'absolute'
+    });
+    $spinner.toggle();
+  };
+
+  var resize_timer = null;
+  var resize_timed = function() {
+    if (resize_timer != null) clearTimeout(resize_timer);
+    resize_timer = setTimeout(resize_panel, 100);
+  };
+
+  $(window).bind("resize", resize_timed);
+  resize_panel();
+  resize_timed();
+});
+</script>
+{% endblock %}
+{# vim: ft=xhtml.jinja sw=2
+#}
