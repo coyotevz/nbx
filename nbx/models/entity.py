@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from nbx.models import db
+from nbx.models.misc import TimestampMixin
 
-class Entity(db.Model):
+class Entity(db.Model, TimestampMixin):
     """
     Base class for entity submodels.
 

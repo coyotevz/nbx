@@ -5,10 +5,28 @@ from sqlalchemy.ext.declarative import declared_attr
 from nbx.models import db
 
 
+class TimestampMixin(object):
+
+    created = db.Column(db.DateTime, default=datetime.now)
+    modified = db.Column(db.DateTime, default=datetime.now,
+                         onupdate=datetime.now)
+
+    @staticmethod
+    def stamp_modified(mapper, connection, target):
+        if db.object_session(target).is_modified(target):
+            target.modified = datetime.now()
+
+    @classmethod
+    def __declare_last__(cls):
+        db.event.listen(cls, 'before_update', cls.stamp_modified)
+
+
 class RefEntityMixin(object):
+
     @declared_attr
     def entity_id(cls):
-        return db.Column('entity_id', db.Integer, db.ForeignKey('entity.id'), nullable=False)
+        return db.Column('entity_id', db.Integer, db.ForeignKey('entity.id'),
+                         nullable=False)
 
     @declared_attr
     def entity(cls):
