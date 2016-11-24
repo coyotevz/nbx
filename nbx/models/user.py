@@ -23,7 +23,7 @@ class UserQuery(BaseQuery):
         If no user found then None is returned.
         """
         try:
-            user = self.get(int(identity.name))
+            user = self.get(int(identity.id or 0))
         except ValueError:
             user = None
 
