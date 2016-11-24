@@ -32,8 +32,7 @@ class RefEntityMixin(object):
     def entity(cls):
         name = cls.__name__.lower()
         return db.relationship('Entity',
-                               backref=db.backref(name, lazy='joined'),
-                               lazy='joined')
+                               backref=db.backref(name, lazy='dynamic'))
 
 
 class Address(RefEntityMixin, db.Model):
