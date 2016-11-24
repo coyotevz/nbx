@@ -8,10 +8,10 @@
 
     {{ form.hidden_tag() }}
     <div class="fieldrow first">
-      {{ render_field(form.name, required="required", autofocus="autofocus") }}
+      {{ render_field(form.rz, required="required", autofocus="autofocus") }}
     </div>
     <div class="fieldrow">
-      {{ render_field(form.fancy_name) }}
+      {{ render_field(form.name) }}
     </div>
     <div class="fieldrow">
       {#{{ render_field(form.address) }}#}

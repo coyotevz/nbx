@@ -34,8 +34,8 @@ class LocaleDecimalField(DecimalField):
 
 class SupplierForm(Form):
     id = HiddenField()
-    name = TextField(u'Razón Social', validators=[Required()])
-    fancy_name = TextField(u'Nombre fantasía')
+    rz = TextField(u'Razón Social', validators=[Required()])
+    name = TextField(u'Nombre')
     cuit = TextField('CUIT')
     notes = TextAreaField('Notas')
 

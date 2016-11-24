@@ -3,7 +3,7 @@
 {% block main %}
 <div class="info-wrapper clearfix">
   <div class="namerow">
-    <h2>{{ supplier.name }}{% if supplier.fancy_name %}<span class="fancy">{{ supplier.fancy_name }}</span>{% endif %}</h2>
+    <h2>{{ supplier.rz }}{% if supplier.name %}<span class="fancy">{{ supplier.name }}</span>{% endif %}</h2>
     {{ button('Editar', url_for('supplier.edit', supplier_id=supplier.id), style="small") }}
   </div>
   <div class="addressrow">
