@@ -8,6 +8,7 @@ from .entity import Entity
 from .comment import Comment
 from .user import User
 from .misc import Address, Phone, Email
+from .fiscal import FiscalData
 from .contact import Contact
 from .supplier import Supplier, SupplierContact
 from .product import Product, ProductSupplierInfo
