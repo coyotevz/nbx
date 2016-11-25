@@ -83,64 +83,43 @@ def configure_webassets(app):
     # webassets bundles
 
     jquery_bundle = Bundle(
-        # 'js/libs/jquery-1.7.js',
-        'js/libs/jquery-1.7.1.js',
-        'js/libs/ui/jquery.ui.core.js',
-        'js/libs/ui/jquery.ui.position.js',
-        'js/libs/ui/jquery.ui.widget.js',
-        'js/libs/ui/jquery.ui.tabs.js',
-        'js/libs/ui/jquery.ui.dialog.js',
-        'js/libs/ui/jquery.ui.datepicker.js',
-        'js/libs/ui/jquery.ui.datepicker-es.js',
-        'js/libs/ui/jquery.effects.core.js',
-        'js/libs/ui/jquery.effects.drop.js',
-        'js/libs/ui/jquery.effects.fade.js',
+        'js/libs/jquery-3.1.1.js',
+    )
+
+    js_bootstrap_bundle = Bundle(
+        'js/bootstrap/transition.js',
+        'js/bootstrap/alert.js',
+        'js/bootstrap/button.js',
+        'js/bootstrap/carousel.js',
+        'js/bootstrap/collapse.js',
+        'js/bootstrap/dropdown.js',
+        'js/bootstrap/modal.js',
+        'js/bootstrap/tab.js',
+        'js/bootstrap/affix.js',
+        'js/bootstrap/scrollspy.js',
+        'js/bootstrap/tooltip.js',
+        'js/bootstrap/popover.js',
     )
 
     js_bundle = Bundle(
         jquery_bundle,
-        'js/plugins/jshashtable.js',
-        'js/plugins/jquery.numberformatter.js',
-        'js/plugins/jquery.calculation.js',
-        'js/plugins/jquery.autoresize.js',
-        'js/plugins/jquery.tools.tooltip.js',
-        'js/plugins/jquery.tools.tooltip.slide.js',
-        'js/plugins/date.js',
-        'js/plugins/jquery.message.js',
-        'js/plugins/jquery.ajaxQueue.js',
-        'js/plugins/jquery.autocomplete.js',
-        'js/plugins/jquery.select.autocomplete.js',
-        'js/plugins/jquery.cookie.js',
-        'js/plugins/jquery.form.js',
-        'js/script.js',
+        js_bootstrap_bundle,
         filters='jsmin',
         output=path.join(assets_out_dir, 'js_bundle.js')
     )
 
-    scss = get_filter('scss', load_paths=['scss'])
+    scss = get_filter('scss', load_paths=['style'])
 
     scss_bundle = Bundle(
-        'scss/master.scss',
-        'scss/forms.scss',
-        'scss/dateinput.scss',
-        'scss/list.scss',
-        'scss/buttons.scss',
-        'scss/icons.scss',
-        'scss/tabs.scss',
-        'scss/dialogs.scss',
-        'scss/login.scss',
+        'style/master.scss',
         filters=scss,
         output=path.join(assets_out_dir, 'style_bundle.css'),
         debug=False,
     )
 
     css_bundle = Bundle(
-        'css/reset.css',
-        # 'css/jquery.ui.tabs.css',
-        'fonts/meta-web-pro.css',
-        'fonts/droid.css',
         scss_bundle,
-        filters='cssmin',
+        filters='autoprefixer, cssmin',
         output=path.join(assets_out_dir, 'css_bundle.css'),
     )
 

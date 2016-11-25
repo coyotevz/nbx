@@ -1,0 +1,34 @@
+<!doctype html>
+<html class="no-js" lang="es-ar">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block title %}nbx{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="author" content="Augusto Roccasalva">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    {%- assets "css_bundle" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+    {%- endassets %}
+
+    {%- block css %}{% endblock %}
+
+    <script type="text/javascript">
+      var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+  </head>
+
+  <body>
+    {% block header %}{% endblock %}
+
+    {% block main %}{% endblock %}
+
+    {% block footer %}{% endblock %}
+
+    {%- assets "js_bundle" %}
+    <script src="{{ ASSET_URL }}"></script>
+    {%- endassets %}
+    {%- block js %}{% endblock %}
+  </body>
+</html>
