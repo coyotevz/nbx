@@ -114,7 +114,7 @@ def configure_webassets(app):
         'style/master.scss',
         filters=scss,
         output=path.join(assets_out_dir, 'style_bundle.css'),
-        debug=False,
+        depends=('style/*.scss',)
     )
 
     css_bundle = Bundle(
