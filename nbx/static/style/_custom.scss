@@ -1,0 +1,18 @@
+body {
+  padding-top: 50px;
+}
+
+.nav {
+  > li > a:hover {
+    text-decoration: underline;
+    &.nav-link {
+      text-decoration: none;
+    }
+  }
+
+  .user-identity .btn,
+  .user-identity .dropdown-menu,
+  .login-link {
+    font-size: 13px;
+  }
+}
