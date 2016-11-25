@@ -6,11 +6,16 @@
   <a class="icon icon-home" href="{{ url_for('supplier.index') }}">Inicio</a>
   {% endif %}
   <ul>
+    <li id="account" class="nbx-account">
+      TODO
+    </li>
+  </ul>
+  <ul class="login-widget">
     {% if g.user %}
-    <li style="float: left;">{{ g.user.first_name }}{% if g.user.last_name %} {{ g.user.last_name }}{% endif %}</li>
-    <li style="float: right; margin-left: 5px;"><a href="{{ url_for('account.logout') }}">Logout</a></li>
+    <li class="user-identity">{{ g.user.first_name }}{% if g.user.last_name %} {{ g.user.last_name }}{% endif %}</li>
+    <li class="logout-link"><a href="{{ url_for('account.logout') }}">Logout</a></li>
     {% else %}
-    <li><a href="{{ url_for('account.login', next=request.url) }}">Login</a></li> 
+    <li class="login-link"><a href="{{ url_for('account.login', next=request.url) }}">Login</a></li>
     {% endif %}
   </ul>
 </nav>

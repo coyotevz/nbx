@@ -1,0 +1,13 @@
+.login-widget {
+  font-family: arial,sans-serif;
+
+  .user-identity {
+    float: left;
+  }
+
+  .logout-link,
+  .login-link {
+    float: right;
+    margin-left: 3px;
+  }
+}

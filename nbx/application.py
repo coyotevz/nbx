@@ -128,6 +128,7 @@ def configure_webassets(app):
         'scss/icons.scss',
         'scss/tabs.scss',
         'scss/dialogs.scss',
+        'scss/login.scss',
         filters=scss,
         output=path.join(assets_out_dir, 'style_bundle.css'),
         debug=False,
