@@ -21,18 +21,12 @@
 
   <body>
 
-    <div class="container {% block containerclass %}page{% endblock %}">
-      <header>
-        {% block header %}{% endblock %}
-      </header>
-
-      <div id="main" role="main">
+    <div class="{% block containerclass %}page{% endblock %}">
+      {% block header %}{% endblock %}
+      <div class="container" role="main">
         {% block main %}{% endblock %}
-      </div> <!-- #main -->
-
-      <footer>
-        {% block footer %}{% endblock %}
-      </footer>
+      </div>
+      {% block footer %}{% endblock %}
     </div> <!-- .container -->
 
     {%- assets "js_bundle" %}
