@@ -1,7 +1,23 @@
+/* Sticky footer styles */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: $footer-height;
+}
 
 .nbx-footer,
 .nbx-footer-inverse {
-  padding-top: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: $footer-height;
+  padding-top: 9px;
   padding-bottom: 10px;
   margin-top: 50px;
   font-size: 13px;

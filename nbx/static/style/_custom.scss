@@ -2,7 +2,7 @@ body {
   padding-top: 50px;
 }
 
-.nav {
+.navbar-nav {
   > li > a:hover {
     text-decoration: underline;
     &.nav-link {
@@ -15,4 +15,9 @@ body {
   .login-link {
     font-size: 13px;
   }
+}
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
