@@ -17,7 +17,14 @@ body {
   }
 }
 
-.sub-header {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+.main {
+  h3.page-header {
+    margin-top: 20px;
+  }
+
+  .sub-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid $page-header-border-color;
+  }
 }
+
