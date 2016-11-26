@@ -2,4 +2,26 @@
 
 {% block main %}
 <h2>Proveedores</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Documentos</th>
+      <th>Monto</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for supplier in suppliers %}
+    <tr>
+      <th scope="row">1</th>
+      <td class="name"><a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.full_name }}</a></td>
+      <td class="documents">documentos</td>
+      <td class="amount">$ 13.240,25</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock main %}
