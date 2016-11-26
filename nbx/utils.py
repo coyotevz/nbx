@@ -15,10 +15,13 @@ def moneyfmt(value, places=2, curr='', sep='.', dp=',',
     neg:        optional sign for negative numbers: '-', space or blank
     trailneg:   optional trailing minus indicator: '-', ')', space or blank
     """
+    if not isinstance(value, Decimal):
+        value = Decimal(value)
+
     q = Decimal(10) ** -places
     sign, digits, exp = value.quantize(q).as_tuple()
     result = []
-    digits = map(str, digits)
+    digits = list(map(str, digits))
     build, next = result.append, digits.pop
     if sign:
         build(trailneg)

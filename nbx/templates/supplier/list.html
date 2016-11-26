@@ -14,23 +14,23 @@
 
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h3 class="page-header">Proveedores</h3>
-    <div class="table table-responsive">
-      <table class="table">
+    <div class="suppliers-list">
+      <table class="table table-hover table-responsive">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Documentos</th>
-            <th>Monto</th>
+            <th class="col-md-6 name">Nombre</th>
+            <th class="col-md-2 due-date">Vencimiento</th>
+            <th class="col-md-2 amount">Vencido</th>
+            <th class="col-md-2 balance">Balance</th>
           </tr>
         </thead>
         <tbody>
           {% for supplier in suppliers %}
             <tr>
-              <th scope="row">1</th>
-              <td class="name"><a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.full_name }}</a></td>
-              <td class="documents">documentos</td>
-              <td class="amount">$ 13.240,25</td>
+              <td class="name"><a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.rz }}</a>{% if supplier.name %} <span class="silent">{{ supplier.name }}</span>{% endif %}</td>
+              <td class="due-date">20/11/2016</td>
+              <td class="amount">$ {{ 6890.20|moneyfmt }}</td>
+              <td class="balance">$ {{ 13240.25|moneyfmt }}</td>
             </tr>
           {% endfor %}
         </tbody>

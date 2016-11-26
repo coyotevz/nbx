@@ -26,5 +26,18 @@ body {
     padding-bottom: 10px;
     border-bottom: 1px solid $page-header-border-color;
   }
-}
 
+  .table {
+    .amount,
+    .balance {
+      text-align: right;
+    }
+    .due-date {
+      text-align: center;
+    }
+  }
+
+  .silent {
+    color: $gray-light;
+  }
+}
