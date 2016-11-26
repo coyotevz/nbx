@@ -15,7 +15,7 @@
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h3 class="page-header">Proveedores</h3>
     <div class="suppliers-list">
-      <table class="table table-hover table-responsive">
+      <table id="suppliers-list" class="table table-hover table-responsive">
         <thead>
           <tr>
             <th class="col-md-6 name">Nombre</th>
@@ -40,3 +40,27 @@
   </div>
 </div>
 {% endblock main %}
+
+{% block js %}
+<script>
+  $(function() {
+    $.tablesorter.themes.bootstrap = {
+      table: "table", // Sets classes to table element
+      sortNone: 'sort-none',
+      sortAsc: 'sort-ascending',
+      sortDesc: 'sort-descending',
+      active: 'sort-active',
+      icons: 'sort-icon',
+      iconSortNone: '',
+      iconSortAsc: 'glyphicon glyphicon-triangle-bottom',
+      iconSortDesc: 'glyphicon glyphicon-triangle-top',
+    };
+
+    $('#suppliers-list').tablesorter({
+      theme: "bootstrap",
+      headerTemplate: '{content} {icon}',
+      widgets: ["uitheme"],
+    });
+  });
+</script>
+{% endblock %}
