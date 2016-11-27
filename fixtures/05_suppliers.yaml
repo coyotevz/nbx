@@ -1,0 +1,27 @@
+- model: nbx.models.supplier.Supplier
+  records:
+    - id: 2
+      rz: FV S.A.
+    - id: 3
+      rz: Fundición Delta S.R.L.
+      payment_term: 30
+    - id: 4
+      rz: Eichler S.A.
+      payment_term: 30
+    - id: 5
+      rz: Industrias Aguila Blanca S.A.
+      payment_term: 60
+    - id: 6
+      rz: Industrias Saladillo S.A.
+    - id: 7
+      rz: Macroplast S.A.
+      name: Awaduct
+    - id: 8
+      rz: IPS S.A.C.I. y F.
+    - id: 9
+      rz: Ferrum de Ceramica y Metal S.A.
+    - id: 10
+      rz: DISAPLA S.A.
+    - id: 11
+      rz: Villafranca S.A.
+      name: Bidematic

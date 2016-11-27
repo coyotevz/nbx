@@ -1,0 +1,15 @@
+- model: nbx.models.user.User
+  records:
+    - id: 1
+      first_name: Augusto
+      last_name: Roccasalva
+      username: augusto
+      _pw_hash: 'pbkdf2:sha1:1000$X2qvacOl$6b185750904eb9291ff7dca9a99e5de3e0d213c7'
+      role: 300
+      date_joined: 2016-11-24T05:59:27
+- model: nbx.models.misc.Email
+  records:
+    - id: 1
+      email_type: Main
+      email: augusto@gmail.com
+      entity_id: 1

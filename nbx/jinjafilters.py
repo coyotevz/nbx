@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from nbx.utils import moneyfmt, timeago
+from nbx.utils.format import moneyfmt, timeago
 
 def dateformat_filter(date, format='%d %b, %Y'):
     if date:
