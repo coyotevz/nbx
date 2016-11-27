@@ -56,6 +56,11 @@ def configure_app(app, config=None):
                 app.config.from_object('nbx.config.ProductionConfig')
                 app.logger.info("Config: Production")
 
+    if os.getenv('FLASK_DEBUG') in ('1', 'True', 'TRUE'):
+        from flask_debugtoolbar import DebugToolbarExtension
+        DebugToolbarExtension(app)
+
+
 
 def configure_jinja2(app):
     # Jinja2 extensions
