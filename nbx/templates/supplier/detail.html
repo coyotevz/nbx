@@ -1,0 +1,7 @@
+{% extends "layout-drawer.html" %}
+
+{% block page_content %}
+<div class="page-header">
+  <h2>{{ supplier.rz }}{% if supplier.name %} <small>{{ supplier.name }}</small>{% endif %}</h2>
+</div>
+{% endblock %}

@@ -1,45 +1,32 @@
-{% extends "layout.html" %}
+{% extends "layout-drawer.html" %}
 
-{% block main %}
-<div class="row">
-
-  <div class="col-sm-3 col-md-2 sidebar">
-    <ul class="nav nav-sidebar">
-      <li><a href="#">Pedidos</a></li>
-      <li class="active"><a href="#">Proveedores</a></li>
-      <li><a href="#">Facturas</a></li>
-      <li><a href="#">Contactos</a></li>
-    </ul>
-  </div>
-
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    <h3 class="page-header">Proveedores</h3>
-    <div class="suppliers-list">
-      <table id="suppliers-list" class="table table-hover table-responsive">
-        <thead>
-          <tr>
-            <th class="col-md-6 name">Nombre</th>
-            <th class="col-md-2 due-date">Vencimiento</th>
-            <th class="col-md-2 amount">Vencido</th>
-            <th class="col-md-2 balance">Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for supplier in suppliers %}
-            <tr>
-              <td class="name"><a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.rz }}</a>{% if supplier.name %} <span class="silent">{{ supplier.name }}</span>{% endif %}</td>
-              <td class="due-date">20/11/2016</td>
-              <td class="amount">$ {{ 6890.20|moneyfmt }}</td>
-              <td class="balance">$ {{ 13240.25|moneyfmt }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-    </div>
-  </div>
+{% block page_content %}
+<div class="page-header">
+  <h2>Proveedores</h2>
 </div>
-{% endblock main %}
+<div class="suppliers-list">
+  <table id="suppliers-list" class="table table-hover table-responsive">
+    <thead>
+      <tr>
+        <th class="col-md-6 name">Nombre</th>
+        <th class="col-md-2 due-date">Vencimiento</th>
+        <th class="col-md-2 amount">Vencido</th>
+        <th class="col-md-2 balance">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier in suppliers %}
+        <tr>
+          <td class="name"><a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.rz }}</a>{% if supplier.name %} <span class="silent">{{ supplier.name }}</span>{% endif %}</td>
+          <td class="due-date">20/11/2016</td>
+          <td class="amount">{{ 6890.20|moneyfmt(curr='$ ') }}</td>
+          <td class="balance">{{ 13240.25|moneyfmt(curr='$ ') }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
 
 {% block js %}
 <script>
