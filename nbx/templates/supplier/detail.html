@@ -1,7 +1,55 @@
 {% extends "layout-drawer.html" %}
 
 {% block page_content %}
-<div class="page-header">
-  <h2>{{ supplier.rz }}{% if supplier.name %} <small>{{ supplier.name }}</small>{% endif %}</h2>
-</div>
+  <div class="page-header">
+    <h2>{{ supplier.rz }}{% if supplier.name %} <small>{{ supplier.name }}</small>{% endif %}</h2>
+  </div>
+  <div class="suppliers-detail">
+    <div class="row">
+      <div class="col-md-6">
+        <dl class="dl-horizontal terms">
+          <dt>Plazo de pago</dt>
+          <dd>{{ supplier.payment_term|d('-', true) }}</dd>
+          <dt>Tiempo de entrega</dt>
+          <dd>{{ supplier.leap_time|d('-', true) }}</dd>
+        </dl>
+      </div>
+      <div class="col-md-6">
+        <dl class="dl-horizontal fiscal">
+          <dt>CUIT</dt>
+          <dd>30-71128142-4</dd>
+          <dt>IVA</dt>
+          <dd>Responsable Inscripto</dd>
+          <dt>Ing. Brutos</dt>
+          <dd>CM05-9654321</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="dl-header">Dirección</h4>
+        <dl class="dl-horizontal addresses">
+          <dt>Calle</dt>
+          <dd>Maipú 489</dd>
+          <dt>Localidad</dt>
+          <dd>Ciudad de Mendoza</dd>
+          <dt>Código postal</dt>
+          <dd>5500</dd>
+          <dt>Provincia</dt>
+          <dd>Mendoza</dd>
+        </dl>
+      </div>
+      <div class="col-md-6">
+        {% if supplier.phone %}
+          <h4 class="dl-header">Teléfonos</h4>
+          <dl class="dl-horizontal phone">
+            {% for phone in supplier.phone %}
+              <dt>{{ phone.phone_type }}</dt>
+              <dd>{{ phone.number }}</dd>
+            {% endfor %}
+          </dl>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 {% endblock %}
