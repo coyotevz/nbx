@@ -2,6 +2,7 @@
   records:
     - id: 2
       rz: FV S.A.
+      payment_term: 7
     - id: 3
       rz: Fundición Delta S.R.L.
       payment_term: 30
@@ -25,3 +26,14 @@
     - id: 11
       rz: Villafranca S.A.
       name: Bidematic
+
+- model: nbx.models.misc.Phone
+  records:
+    - id: 1
+      phone_type: Suc. Mendoza
+      number: 4256321
+      entity_id: 2
+    - id: 2
+      phone_type: Atención al cliente
+      number: 0800-456-6541
+      entity_id: 2
