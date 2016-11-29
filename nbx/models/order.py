@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from nbx.models import db
+from nbx.models.misc import TimestampMixin
 
 
 class PurchaseOrder(db.Model):

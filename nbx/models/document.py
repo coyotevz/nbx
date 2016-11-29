@@ -2,9 +2,10 @@
 
 from nbx.models import db
 from nbx.models.payment import DocumentPayment
+from nbx.models.misc import TimestampMixin
 
 
-class Document(db.Model):
+class Document(db.Model, TimestampMixin):
     __tablename__ = 'document'
     id = db.Column(db.Integer, primary_key=True)
     doc_type = db.Column(db.Unicode(10), nullable=False)
