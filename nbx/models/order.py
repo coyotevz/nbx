@@ -4,7 +4,7 @@ from nbx.models import db
 from nbx.models.misc import TimestampMixin
 
 
-class PurchaseOrder(db.Model):
+class PurchaseOrder(db.Model, TimestampMixin):
     __tablename__ = 'purchaseorder'
 
     (ORDER_CANCELLED,
