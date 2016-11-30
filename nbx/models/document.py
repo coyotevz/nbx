@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from decimal import Decimal
 from nbx.models import db
 from nbx.models.payment import DocumentPayment
 from nbx.models.misc import TimestampMixin
@@ -42,9 +43,7 @@ class Document(db.Model, TimestampMixin):
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.supplier_id'),
                             nullable=False)
 
-    document_payments = db.relationship('DocumentPayment',
-                                        cascade='all, delete-orphan',
-                                        backref="document")
+    #: document_payments added by DocumentPayment.document relationship
 
     def add_payment(self, payment, amount=None):
         if amount is None:
@@ -60,8 +59,8 @@ class Document(db.Model, TimestampMixin):
         return self._doc_status.get(self.doc_status)
 
     @property
-    def fulldesc(self):
-        return u"%s %04d-%08d" % (self.doc_type, self.point_sale, self.number)
+    def full_desc(self):
+        return u"%s %04d-%08d" % (self.type, self.point_sale, self.number)
 
     @property
     def cancelled_date(self):
@@ -73,7 +72,12 @@ class Document(db.Model, TimestampMixin):
 
     @property
     def balance(self):
-        paid = db.session.query(func.sum(DocumentPayment.amount))\
-                         .filter(DocumentPayment.invoice==self).scalar()\
+        paid = db.session.query(db.func.sum(DocumentPayment.amount))\
+                         .filter(DocumentPayment.document==self).scalar()\
                          or Decimal(0)
         return self.total - paid
+
+    def __repr__(self):
+        return "<Document '{}' of '{}' ({})>".format(self.full_desc,
+                                                     self.supplier.rz,
+                                                     self.status)

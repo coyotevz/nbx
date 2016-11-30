@@ -24,7 +24,10 @@ class DocumentPayment(db.Model):
     payment_id = db.Column(db.Integer, db.ForeignKey('payment.id'), primary_key=True)
     amount = db.Column(db.Numeric(10, 2), nullable=False)
 
-    payment = db.relationship(Payment, lazy='joined', backref='document_payments')
+    payment = db.relationship(Payment, lazy='joined',
+                              backref='document_payments')
+    document = db.relationship('Document', lazy='joined',
+                               backref='document_payments')
 
     def __init__(self, payment, amount):
         self.payment = payment
