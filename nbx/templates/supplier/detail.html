@@ -22,7 +22,7 @@
     <!-- panes -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="documents">
-        <table class="table table-hover">
+        <table class="table table-hover table-condensed">
           <thead>
             <tr>
               <th class="col-md-1 issue-date">Emisión</th>
@@ -34,22 +34,14 @@
             </tr>
           </thead>
           <tbody>
-              <tr>
-                <td class="issue-date">25/11/2016</td>
-                <td class="number">VFA 00026-0004563</td>
-                <td class="state">Adeudada</td>
-                <td class="expire-date">05/12/2016</td>
-                <td class="balance">{{ 132457.26|moneyfmt(curr='$ ') }}</td>
-                <td class="total">{{ 132457.26|moneyfmt(curr='$ ') }}</td>
-              </tr>
             {% for document in supplier.documents %}
               <tr>
-                <td class="issue-date">{{ document.issue_date }}</td>
-                <td class="number">{{ document.number }}</td>
-                <td class="state">{{ document._state }}</td>
-                <td class="expire-date">{{ document.expire_date }}</td>
-                <td class="balance">{{ document.balance|d('&mdash;', true) }}</td>
-                <td class="total">{{ document.total }}</td>
+                <td class="issue-date">{{ document.issue_date|dateformat }}</td>
+                <td class="number"><strong>{{ document.full_desc }}</strong></td>
+                <td class="state">{{ document.status }}</td>
+                <td class="expire-date">{{ document.expiration_date|dateformat }}</td>
+                <td class="balance">{% if document.doc_status in ('STATUS_PENDING', 'STATUS_EXPIRED') and document.balance %}{{ document.balance|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}</td>
+                <td class="total">{{ document.total|moneyfmt(curr='$ ') }}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -60,34 +52,40 @@
       </div>
       <div role="tabpanel" class="tab-pane" id="detail">
         <div class="row">
+          {% with address = supplier.address|first %}
+          {% if address %}
           <div class="col-md-6">
             <h4 class="dl-header">Dirección</h4>
             <dl class="dl-horizontal addresses">
               <dt>Calle</dt>
-              <dd>Maipú 489</dd>
+              <dd>{{ address.street }} {{ address.streetnumber|d('', true) }}</dd>
               <dt>Localidad</dt>
-              <dd>Ciudad de Mendoza</dd>
+              <dd>{{ address.city|d('-', true) }}</dd>
               <dt>Código postal</dt>
-              <dd>5500</dd>
+              <dd>{{ address.zip_code|d('-', true) }}</dd>
               <dt>Provincia</dt>
-              <dd>Mendoza</dd>
+              <dd>{{ address.province }}</dd>
             </dl>
           </div>
+          {% endif %}
+          {% endwith %}
+          {% if supplier.fiscal_data %}
           <div class="col-md-6">
             <h4 class="dl-header">Datos Fiscales</h4>
             <dl class="dl-horizontal fiscal">
               <dt>CUIT</dt>
-              <dd>30-71128142-4</dd>
+              <dd>{{ supplier.fiscal_data.cuit|cuitfmt }}</dd>
               <dt>IVA</dt>
-              <dd>Responsable Inscripto</dd>
+              <dd>{{ supplier.fiscal_data.type|d('-', true) }}</dd>
               <dt>Ing. Brutos</dt>
-              <dd>CM05-9654321</dd>
+              <dd>{{ supplier.fiscal_data.iibb|d('-', true) }}</dd>
             </dl>
           </div>
+          {% endif %}
         </div>
         <div class="row">
+          {% if supplier.phone %}
           <div class="col-md-6">
-            {% if supplier.phone %}
               <h4 class="dl-header">Teléfonos</h4>
               <dl class="dl-horizontal phone">
                 {% for phone in supplier.phone %}
@@ -95,8 +93,8 @@
                   <dd>{{ phone.number }}</dd>
                 {% endfor %}
               </dl>
-            {% endif %}
           </div>
+          {% endif %}
           <div class="col-md-6">
             <h4 class="dl-header">Terminos Comerciales</h4>
             <dl class="dl-horizontal terms">
