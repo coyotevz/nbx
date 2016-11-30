@@ -15,6 +15,7 @@ class Supplier(Entity):
                             primary_key=True)
     rz = Entity._name_1
     name = Entity._name_2
+    web = db.Column(db.Unicode, default=None)
 
     fiscal_data_id = db.Column(db.Integer, db.ForeignKey('fiscal_data.id'))
     fiscal_data = db.relationship(FiscalData,
@@ -22,6 +23,7 @@ class Supplier(Entity):
 
     payment_term = db.Column(db.Integer) # in days
     leap_time = db.Column(db.Integer) # in days
+    delivery_included = db.Column(db.Boolean, default=False)
 
     supplier_contacts = db.relationship('SupplierContact',
                                         cascade='all, delete-orphan',
@@ -40,10 +42,6 @@ class Supplier(Entity):
     documents = db.relationship('Document', backref="supplier", lazy='dynamic')
 #    products = association_proxy('products_info', 'product')
 
-    @property
-    def full_name(self):
-        n = " ({0})".format(self.name) if self.name else ''
-        return "{0}{1}".format(self.rz, n)
 
     def add_contact(self, contact, role):
         self.supplier_contacts.append(SupplierContact(contact, role))
@@ -51,14 +49,22 @@ class Supplier(Entity):
 #    def add_product(self, product, **kwargs):
 #        self.products_info.append(ProductSupplierInfo(product=product, **kwargs))
 
+    @property
+    def full_name(self):
+        n = " ({0})".format(self.name) if self.name else ''
+        return "{0}{1}".format(self.rz, n)
+
 
 class SupplierContact(db.Model):
     __tablename__ = 'supplier_contact'
-    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.supplier_id'), primary_key=True)
-    contact_id = db.Column(db.Integer, db.ForeignKey('contact.contact_id'), primary_key=True)
+    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.supplier_id'),
+                            primary_key=True)
+    contact_id = db.Column(db.Integer, db.ForeignKey('contact.contact_id'),
+                           primary_key=True)
     role = db.Column(db.Unicode)
 
-    contact = db.relationship('Contact', lazy='joined', backref='supplier_contacts')
+    contact = db.relationship('Contact', backref='supplier_contacts',
+                              lazy='joined')
 
     def __init__(self, contact, role):
         self.contact = contact
