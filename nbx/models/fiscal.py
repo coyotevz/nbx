@@ -20,7 +20,7 @@ class FiscalData(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     cuit = db.Column(db.Unicode(13))
-    fiscal_type = db.Column(db.Enum(*_fiscal_types, name='fiscal_type'),
+    fiscal_type = db.Column(db.Enum(*_fiscal_types.keys(), name='fiscal_type'),
                             default=FISCAL_CONSUMIDOR_FINAL)
     iibb = db.Column(db.Unicode, nullable=True)
 
@@ -34,7 +34,7 @@ class FiscalData(db.Model):
 
     def __repr__(self):
         return "<FiscalData '{} {}' of '{}'>".format(
-            self.fiscal_type,
+            self.type,
             self.cuit,
             self.entity.full_name,
         )
