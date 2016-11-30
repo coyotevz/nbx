@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine, MetaData, Table, Column
-from sqlalchemy import Integer, ForeignKey, Text, Date, Numeric, Boolean, String, Float, Unicode
-from sqlalchemy.orm import mapper, sessionmaker, relationship, backref
+from sqlalchemy import (Boolean, Column, Date, Float, ForeignKey, Integer,
+                        MetaData, Numeric, String, Table, Text, Unicode,
+                        create_engine)
+from sqlalchemy.orm import backref, mapper, relationship, sessionmaker
 
 metadata = MetaData()
 
