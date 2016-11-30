@@ -22,6 +22,7 @@ class FiscalData(db.Model):
     cuit = db.Column(db.Unicode(13))
     fiscal_type = db.Column(db.Enum(*_fiscal_types, name='fiscal_type_enum'),
                             default=FISCAL_CONSUMIDOR_FINAL)
+    iibb = db.Column(db.Unicode, nullable=True)
 
     @property
     def needs_cuit(self):

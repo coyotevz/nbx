@@ -98,3 +98,12 @@ def loadfix():
                 print("loading fixtures from '{}'".format(fixture_file))
                 fixtures = load_yaml(fixture_file)
                 load_fixtures(db, fixtures)
+
+
+@app.cli.command()
+def migrate():
+    """Migrate from a database for old application"""
+    from nbx.utils.migrate import migrate_suppliers, configure_session
+    db.create_all()
+    session = configure_session(app.config['MIGRATION_DB_URI'])
+    migrate_suppliers(session)
