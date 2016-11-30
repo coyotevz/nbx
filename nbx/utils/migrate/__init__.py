@@ -13,7 +13,8 @@ from decimal import Decimal
 import click
 # new app
 from nbx.application import create_app
-from nbx.models import Address, Contact, Email, FiscalData, Phone, Supplier, db
+from nbx.models import (Address, Contact, Document, Email, FiscalData, Phone,
+                        Supplier, db)
 from sqlalchemy import func
 
 # old app
@@ -33,7 +34,7 @@ def _cuit(cuit):
 
 doc_type_map = {
     'Factura A': Document.TYPE_FACTURA_A,
-    'Nota de Crédito': Document.TYPE_NOTA_CREDITO,
+    'Nota de Crédito': Document.TYPE_NOTA_CREDITO_A,
     'Presupuesto': Document.TYPE_PRESUPUESTO,
 }
 
@@ -48,11 +49,13 @@ def migrate_document(s, f, supplier):
         doc_status = Document.STATUS_EXPIRED
     doc = Document(issue_date=check_year(f.fecha_de_emision),
                    expiration_date=check_year(f.fecha_de_vencimiento),
-                   doc_type=doc_type_map[f.tipoFactura],
+                   doc_type=doc_type_map[f.tipo_Factura],
                    point_sale=1, # no information about this
                    number=f.numero_factura,
                    total=Decimal(f.monto),
                    notes=f.descripcion if f.hay_coment == 'Si' else None,
+                   doc_status=doc_status,
+                   supplier=supplier)
 
 def migrate_order(s, pedido, supplier):
     pass
