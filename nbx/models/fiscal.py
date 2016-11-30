@@ -30,7 +30,7 @@ class FiscalData(db.Model):
 
     @property
     def type(self):
-        return self._fiscal_type.get(self.fiscal_type)
+        return self._fiscal_types.get(self.fiscal_type)
 
     def __repr__(self):
         return "<FiscalData '{} {}' of '{}'>".format(
