@@ -44,7 +44,8 @@ class Address(RefEntityMixin, db.Model):
     streetnumber = db.Column(db.Unicode(64))
     city = db.Column(db.Unicode(64))
     province = db.Column(db.Unicode(32), nullable=False)
-    postal_code = db.Column(db.Unicode(32))
+    zip_code = db.Column(db.Unicode(32))
+    address_type = db.Column(db.Unicode)
 
     def __str__(self):
         retval = self.street
