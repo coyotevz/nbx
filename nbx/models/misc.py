@@ -47,7 +47,7 @@ class Address(RefEntityMixin, db.Model):
     postal_code = db.Column(db.Unicode(32))
 
     def __str__(self):
-        retval = unicode(self.street)
+        retval = self.street
         retval += " %s" % self.streetnumber if self.streetnumber else 'S/N'
         if self.city:
             retval += ", %s" % self.city
@@ -66,7 +66,7 @@ class Phone(RefEntityMixin, db.Model):
     number = db.Column(db.Unicode, nullable=False)
 
     def __str__(self):
-        retval = unicode(self.phone_type+': ' if self.phone_type else '')
+        retval = self.phone_type+': ' if self.phone_type else ''
         retval += self.number
         return retval
 
