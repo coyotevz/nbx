@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
+import locale
 import os
 from os import path
-import locale
-locale.setlocale(locale.LC_ALL, '')
 
 from flask import Flask, g
-from flask_assets import Environment, Bundle
+from flask_assets import Bundle, Environment
 from flask_principal import Principal, identity_loaded
-
+from nbx.jinjafilters import (cuitfmt_filter, dateformat_filter,
+                              moneyfmt_filter, timeago_filter)
+from nbx.models import User, db
+from nbx.views import account, order, product, supplier
 from webassets.filter import get_filter
 
-from nbx.views import supplier, product, order, account
-from nbx.models import db, User
-from nbx.jinjafilters import dateformat_filter, timeago_filter, moneyfmt_filter
+locale.setlocale(locale.LC_ALL, '')
+
 
 __all__ = ['create_app']
 
@@ -74,6 +75,7 @@ def configure_jinja2(app):
     app.jinja_env.filters['dateformat'] = dateformat_filter
     app.jinja_env.filters['timeago'] = timeago_filter
     app.jinja_env.filters['moneyfmt'] = moneyfmt_filter
+    app.jinja_env.filters['cuitfmt'] = cuitfmt_filter
 
 
 def configure_webassets(app):
