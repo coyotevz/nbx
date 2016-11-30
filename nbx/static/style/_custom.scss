@@ -29,10 +29,12 @@ body {
 
   .table {
     .amount,
-    .balance {
+    .balance,
+    .total {
       text-align: right;
     }
-    .due-date {
+    .due-date,
+    .expiration-date {
       text-align: center;
     }
   }
