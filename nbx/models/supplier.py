@@ -39,7 +39,8 @@ class Supplier(Entity):
     #: - phone (collection)
     #: - extra field (collection)
 
-    documents = db.relationship('Document', backref="supplier", lazy='dynamic')
+    documents = db.relationship('Document', backref="supplier", lazy='dynamic',
+                                order_by='Document.issue_date.asc()')
 #    products = association_proxy('products_info', 'product')
 
 
