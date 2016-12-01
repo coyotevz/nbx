@@ -93,11 +93,6 @@ def configure_webassets(app):
         'js/libs/jquery-3.1.1.js',
     )
 
-    tablesorter_bundle = Bundle(
-        'js/libs/tablesorter/jquery.tablesorter-2.27.8.js',
-        'js/libs/tablesorter/widgets/widget-uitheme.js',
-    )
-
     js_bootstrap_bundle = Bundle(
         'js/bootstrap/transition.js',
         'js/bootstrap/alert.js',
@@ -115,7 +110,6 @@ def configure_webassets(app):
 
     js_bundle = Bundle(
         jquery_bundle,
-        tablesorter_bundle,
         js_bootstrap_bundle,
         filters='jsmin',
         output=path.join(assets_out_dir, 'js_bundle.js')

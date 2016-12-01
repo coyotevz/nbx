@@ -30,24 +30,5 @@
 
 {% block js %}
 <script>
-  $(function() {
-    $.tablesorter.themes.bootstrap = {
-      table: "table", // Sets classes to table element
-      sortNone: 'sort-none',
-      sortAsc: 'sort-ascending',
-      sortDesc: 'sort-descending',
-      active: 'sort-active',
-      icons: 'sort-icon',
-      iconSortNone: '',
-      iconSortAsc: 'glyphicon glyphicon-triangle-bottom',
-      iconSortDesc: 'glyphicon glyphicon-triangle-top',
-    };
-
-    $('#suppliers-list').tablesorter({
-      theme: "bootstrap",
-      headerTemplate: '{content} {icon}',
-      widgets: ["uitheme"],
-    });
-  });
 </script>
 {% endblock %}
