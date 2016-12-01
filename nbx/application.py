@@ -93,6 +93,10 @@ def configure_webassets(app):
         'js/libs/jquery-3.1.1.js',
     )
 
+    datatable_bundle = Bundle(
+        'js/libs/jquery.dataTables.js',
+    )
+
     js_bootstrap_bundle = Bundle(
         'js/bootstrap/transition.js',
         'js/bootstrap/alert.js',
@@ -110,6 +114,7 @@ def configure_webassets(app):
 
     js_bundle = Bundle(
         jquery_bundle,
+        datatable_bundle,
         js_bootstrap_bundle,
         filters='jsmin',
         output=path.join(assets_out_dir, 'js_bundle.js')
@@ -126,6 +131,7 @@ def configure_webassets(app):
 
     css_bundle = Bundle(
         scss_bundle,
+        'style/datatables/jquery.dataTables.css',
         filters='autoprefixer, cssmin',
         output=path.join(assets_out_dir, 'css_bundle.css'),
     )
