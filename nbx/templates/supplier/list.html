@@ -31,7 +31,12 @@
 {% block js %}
 <script>
   $(function() {
-    $('#suppliers-list').DataTable();
+    $('#suppliers-list').DataTable({
+      lengthChange: false,
+      language: {
+        url: '/static/js/libs/dataTables.spanish.lang.json'
+      }
+    });
   });
 </script>
 {% endblock %}

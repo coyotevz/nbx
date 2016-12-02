@@ -95,6 +95,7 @@ def configure_webassets(app):
 
     datatable_bundle = Bundle(
         'js/libs/jquery.dataTables.js',
+        'js/libs/dataTables.bootstrap.js',
     )
 
     js_bootstrap_bundle = Bundle(
@@ -131,7 +132,8 @@ def configure_webassets(app):
 
     css_bundle = Bundle(
         scss_bundle,
-        'style/datatables/jquery.dataTables.css',
+        #'style/datatables/jquery.dataTables.css',
+        'style/datatables/dataTables.bootstrap.css',
         filters='autoprefixer, cssmin',
         output=path.join(assets_out_dir, 'css_bundle.css'),
     )
