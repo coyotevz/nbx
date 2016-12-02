@@ -18,13 +18,16 @@ body {
 }
 
 .main {
-  h3.page-header {
-    margin-top: 20px;
-  }
 
-  .sub-header {
-    padding-bottom: 10px;
+  .section-header {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding-bottom: 9px;
     border-bottom: 1px solid $page-header-border-color;
+
+    .form-control {
+      margin-top: 16px;
+    }
   }
 
   .table {
@@ -43,3 +46,4 @@ body {
     color: $gray-light;
   }
 }
+
