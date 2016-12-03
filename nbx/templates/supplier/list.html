@@ -19,9 +19,21 @@
       {% for supplier in suppliers %}
         <tr>
           <td class="name"><a href="{{ url_for('.detail', supplier_id=supplier.id) }}">{{ supplier.rz }}</a>{% if supplier.name %} <span class="silent">{{ supplier.name }}</span>{% endif %}</td>
-          <td class="due-date">{% if supplier.expiration_date is not none %}{{ supplier.expiration_date|dateformat }}{% endif %}</td>
-          <td class="amount">{% if supplier.expired %}{{ supplier.expired|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}</td>
-          <td class="balance">{% if supplier.debt %}{{ supplier.debt|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}</td>
+          {% with e = supplier.expiration_date %}
+          <td class="due-date" data-order="{{ e.toordinal() if e else 0 }}">
+            {{ e|dateformat if e }}
+          </td>
+          {% endwith %}
+          {% with e = supplier.expired %}
+          <td class="amount" data-order="{{ e }}">
+          {% if e %}{{ e|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}
+          </td>
+          {% endwith %}
+          {% with d = suppiler.debt %}
+          <td class="balance" data-order="{{ d }}">
+          {% if d %}{{ d|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}
+          </td>
+          {% endwith %}
         </tr>
       {% endfor %}
     </tbody>
