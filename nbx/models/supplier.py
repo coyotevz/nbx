@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from decimal import Decimal
 from sqlalchemy.ext.associationproxy import association_proxy
 
 from nbx.models import db
 from nbx.models.entity import Entity
 from nbx.models.fiscal import FiscalData
+from nbx.models.document import Document
 #from nbx.models.product import ProductSupplierInfo
 
 class Supplier(Entity):
@@ -30,8 +32,13 @@ class Supplier(Entity):
                                         backref='supplier')
     contacts = association_proxy('supplier_contacts', 'contact')
 
+    debt = db.Column(db.Numeric(10, 2))
+    expired = db.Column(db.Numeric(10, 2))
+    expiration_date = db.Column(db.DateTime, default=None)
+
     #: 'bank_accounts' attribute added by BankAccount.supplier relation
     #: 'orders' attribute added by PurchaseOrder.supplier relation
+    #: 'documents' attribute added by Document.supplier relation
 
     #: Inherited from Entity
     #: - address (collection)
@@ -39,8 +46,6 @@ class Supplier(Entity):
     #: - phone (collection)
     #: - extra field (collection)
 
-    documents = db.relationship('Document', backref="supplier", lazy='dynamic',
-                                order_by='Document.issue_date.asc()')
 #    products = association_proxy('products_info', 'product')
 
 
@@ -54,6 +59,21 @@ class Supplier(Entity):
     def full_name(self):
         n = " ({0})".format(self.name) if self.name else ''
         return "{0}{1}".format(self.rz, n)
+
+    def _update_expiration_date(self):
+        doc = self.documents.filter(Document.doc_status.in_([Document.STATUS_PENDING, Document.STATUS_EXPIRED])).order_by(Document.expiration_date.asc()).first()
+        if doc:
+            self.expiration_date = doc.expiration_date
+        else:
+            self.expiration_date = None
+
+
+@db.event.listens_for(Supplier, "init")
+def init(target, args, kwargs):
+    if 'debt' not in kwargs:
+        target.debt = 0
+    if 'expired' not in kwargs:
+        target.expired = 0
 
 
 class SupplierContact(db.Model):

@@ -54,8 +54,8 @@ def migrate_document(s, f, supplier):
                    number=f.numero_factura,
                    total=Decimal(f.monto),
                    notes=f.descripcion if f.hay_coment == 'Si' else None,
-                   doc_status=doc_status,
-                   supplier=supplier)
+                   doc_status=doc_status)
+    supplier.documents.append(doc)
 
 def migrate_order(s, pedido, supplier):
     pass
@@ -106,11 +106,11 @@ def migrate_suppliers(s):
                     contact.email.append(email)
                 supplier.add_contact(contact, 'Importado')
 
+            db.session.add(supplier)
             for factura in s.query(Factura).filter(Factura.id_proveedor==p.id):
                 migrate_document(s, factura, supplier)
             for pedido in s.query(PedidoSub).filter(PedidoSub.id_proveedor==p.id):
                 migrate_order(s, pedido, supplier)
             for cuenta_banco in s.query(CuentaBanco).filter(CuentaBanco.id_proveedor==p.id):
                 migrate_bank_account(s, cuenta_banco, supplier)
-            db.session.add(supplier)
         db.session.commit()
