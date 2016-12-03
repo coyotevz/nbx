@@ -36,12 +36,16 @@ class Document(db.Model, TimestampMixin):
     number = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
     doc_status = db.Column(db.Enum(*_doc_status.keys(), name='doc_status'),
-                       default=STATUS_PENDING)
+                           default=STATUS_PENDING)
     issue_date = db.Column(db.Date)
     expiration_date = db.Column(db.Date)
     notes = db.Column(db.UnicodeText)
+
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.supplier_id'),
                             nullable=False)
+    supplier = db.relationship('Supplier', backref=db.backref('documents',
+                               order_by='Document.issue_date.asc()',
+                               lazy='dynamic'))
 
     #: document_payments added by DocumentPayment.document relationship
 
@@ -89,14 +93,19 @@ def set_supplier(target, value, oldvalue, initiator):
     # value: Supplier
     if target.doc_status in ('STATUS_PENDING', None):
         value.debt += target.total
+        value._update_expiration_date()
         if oldvalue:
             oldvalue.debt -= target.total
+            oldvalue._update_expiration_date()
     elif target.doc_status is 'STATUS_EXPIRED':
         value.debt += target.total
         value.expired += target.total
+        value._update_expiration_date()
         if oldvalue:
             oldvalue.debt -= target.total
             oldvalue.expired -= targe.total
+            oldvalue._update_expiration_date()
+
 
 @db.event.listens_for(Document.doc_status, "set", active_history=True)
 def set_doc_status(target, value, oldvalue, initiator):
@@ -107,19 +116,23 @@ def set_doc_status(target, value, oldvalue, initiator):
             if value == 'STATUS_PAID':
                 target.supplier.expired -= target.total
                 target.supplier.debt -= target.total
+                target.supplier._update_expiration_date()
             elif value == 'STATUS_PENDING':
                 target.supplier.expired -= target.total
         elif oldvalue == 'STATUS_PENDING':
             if value == 'STATUS_PAID':
                 target.supplier.debt -= target.total
+                _update_expiration_date(target.supplier)
             elif value == 'STATUS_EXPIRED':
                 target.supplier.expired += target.total
         elif oldvalue == 'STATUS_PAID':
             if value == 'STATUS_PENDING':
                 target.supplier.debt += target.total
+                target.supplier._update_expiration_date()
             elif value == 'STATUS_EXPIRED':
                 target.supplier.debt += target.total
                 target.supplier.expired += target.total
+                target.supplier._update_expiration_date()
 
 @db.event.listens_for(Document.total, "set", active_history=True)
 def set_total(target, value, oldvalue, initiator):
