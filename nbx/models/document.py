@@ -81,3 +81,53 @@ class Document(db.Model, TimestampMixin):
         return "<Document '{}' of '{}' ({})>".format(self.full_desc,
                                                      self.supplier.rz,
                                                      self.status)
+
+
+@db.event.listens_for(Document.supplier, "set", active_history=True)
+def set_supplier(target, value, oldvalue, initiator):
+    # target: Document
+    # value: Supplier
+    if target.doc_status in ('STATUS_PENDING', None):
+        value.debt += target.total
+        if oldvalue:
+            oldvalue.debt -= target.total
+    elif target.doc_status is 'STATUS_EXPIRED':
+        value.debt += target.total
+        value.expired += target.total
+        if oldvalue:
+            oldvalue.debt -= target.total
+            oldvalue.expired -= targe.total
+
+@db.event.listens_for(Document.doc_status, "set", active_history=True)
+def set_doc_status(target, value, oldvalue, initiator):
+    # target: Document
+    # value: doc_status
+    if target.supplier:
+        if oldvalue == 'STATUS_EXPIRED':
+            if value == 'STATUS_PAID':
+                target.supplier.expired -= target.total
+                target.supplier.debt -= target.total
+            elif value == 'STATUS_PENDING':
+                target.supplier.expired -= target.total
+        elif oldvalue == 'STATUS_PENDING':
+            if value == 'STATUS_PAID':
+                target.supplier.debt -= target.total
+            elif value == 'STATUS_EXPIRED':
+                target.supplier.expired += target.total
+        elif oldvalue == 'STATUS_PAID':
+            if value == 'STATUS_PENDING':
+                target.supplier.debt += target.total
+            elif value == 'STATUS_EXPIRED':
+                target.supplier.debt += target.total
+                target.supplier.expired += target.total
+
+@db.event.listens_for(Document.total, "set", active_history=True)
+def set_total(target, value, oldvalue, initiator):
+    # target: Document
+    # value: total
+    if target.supplier:
+        if target.doc_status in ('STATUS_PENDING', None):
+            target.supplier.debt += (value - oldvalue)
+        if target.doc_status is 'STATUS_EXPIRED':
+            target.supplier.debt += (value - oldvalue)
+            target.supplier.expired += (value - oldvalue)
