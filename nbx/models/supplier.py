@@ -48,12 +48,6 @@ class Supplier(Entity):
 
 #    products = association_proxy('products_info', 'product')
 
-    def __init__(self):
-        # Sets defaults to instance
-        self.delivery_included = False
-        self.debt = Decimal(0)
-        self.expired = Decimal(0)
-
 
     def add_contact(self, contact, role):
         self.supplier_contacts.append(SupplierContact(contact, role))
@@ -72,6 +66,16 @@ class Supplier(Entity):
             self.expiration_date = doc.expiration_date
         else:
             self.expiration_date = None
+
+@db.events.listen_for(Supplier, "init")
+def supplier_init(target, args, kwargs):
+    # Sets defaults to instance
+    if 'delivery_included' not in kwargs:
+        target.delivery_included = False
+    if 'debt' not in kwargs:
+        target.debt = Decimal(0)
+    if 'expired' not in kwargs:
+        target.expired = Decimal(0)
 
 
 class SupplierContact(db.Model):
