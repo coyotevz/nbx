@@ -1,18 +1,18 @@
 {% extends "layout-drawer.html" %}
-{% from "formhelpers.html" import render_field %}
+{% from "formhelpers.html" import render_field, render_horizontal_field %}
 
 {% block page_content %}
 <div class="section-header">
   <h3>{% if form.id.data %}Editar{% else %}Nuevo{% endif %} Proveedor</h3>
 </div>
-<form id="edit-supplier" method="post" action="." class="">
+<form id="edit-supplier" method="post" action="." class="form-horizontal">
   {{ form.hidden_tag() }}
+  {{ render_horizontal_field(form.rz) }}
+  {{ render_horizontal_field(form.name) }}
   <div class="form-group">
-    {{ render_field(form.rz, class="form-control") }}
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Guardar</button>
+    </div>
   </div>
-  <div class="form-group">
-    {{ render_field(form.name, class="form-control") }}
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
 </form>
 {% endblock %}
