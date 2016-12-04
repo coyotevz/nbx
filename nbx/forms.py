@@ -32,7 +32,7 @@ class LocaleDecimalField(DecimalField):
             return retval
 
 
-class SupplierForm(Form):
+class SupplierForm(FlaskForm):
     id = HiddenField()
     rz = TextField(u'Razón Social', validators=[Required()])
     name = TextField(u'Nombre')
@@ -40,26 +40,26 @@ class SupplierForm(Form):
     notes = TextAreaField('Notas')
 
 
-class ProductForm(Form):
+class ProductForm(FlaskForm):
     id = HiddenField()
     code = TextField(u'Código')
     description = TextField(u'Descripción')
     brand = TextField(u'Marca')
 
 
-class ProductSupplierInfoForm(Form):
+class ProductSupplierInfoForm(FlaskForm):
     id = HiddenField()
     code = TextField(u'Código')
     description = TextField(u'Descripción')
     base_cost = LocaleDecimalField(u'Costo Base')
 
 
-class ProductSupplierForm(Form):
+class ProductSupplierForm(FlaskForm):
     product = FormField(ProductForm)
     psi = FormField(ProductSupplierInfoForm)
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     next = HiddenField()
 
     remember = BooleanField("Remember me")
