@@ -22,7 +22,7 @@
     <!-- panes -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="documents">
-        <table class="table table-hover table-condensed">
+        <table id="supplier-invoices" class="table table-hover table-condensed">
           <thead>
             <tr>
               <th class="col-md-1 issue-date">Emisión</th>
@@ -36,12 +36,12 @@
           <tbody>
             {% for document in supplier.documents %}
               <tr>
-                <td class="issue-date">{{ document.issue_date|dateformat }}</td>
+                <td class="issue-date" data-order="{{ document.issue_date.toordinal() }}">{{ document.issue_date|dateformat }}</td>
                 <td class="number"><strong>{{ document.full_desc }}</strong></td>
                 <td class="state">{{ document.status }}</td>
-                <td class="expire-date">{{ document.expiration_date|dateformat }}</td>
-                <td class="balance">{% if document.doc_status in ('STATUS_PENDING', 'STATUS_EXPIRED') and document.balance %}{{ document.balance|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}</td>
-                <td class="total">{{ document.total|moneyfmt(curr='$ ') }}</td>
+                <td class="expire-date" data-order="{{ document.expiration_date.toordinal() }}">{{ document.expiration_date|dateformat }}</td>
+                <td class="balance" data-order="{{ document.balance }}">{% if document.doc_status in ('STATUS_PENDING', 'STATUS_EXPIRED') and document.balance %}{{ document.balance|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}</td>
+                <td class="total" data-order="{{ document.total }}">{{ document.total|moneyfmt(curr='$ ') }}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -102,6 +102,8 @@
               <dd>{{ supplier.payment_term|d('-', true) }}</dd>
               <dt>Tiempo de entrega</dt>
               <dd>{{ supplier.leap_time|d('-', true) }}</dd>
+              <dt>Flete</dt>
+              <dd>{% if not supplier.delivery_included %}No {% endif %}Incluido</dd>
             </dl>
           </div>
         </div>
@@ -111,4 +113,21 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(function() {
+    var table = $('#supplier-invoices').DataTable({
+      lengthChange: false,
+      dom:
+        "tr" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      language: {
+        url: '/static/js/libs/dataTables.spanish.lang.json'
+      },
+      order: [[0 ,'desc']]
+    });
+  });
+</script>
 {% endblock %}

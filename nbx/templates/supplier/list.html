@@ -29,7 +29,7 @@
           {% if e %}{{ e|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}
           </td>
           {% endwith %}
-          {% with d = suppiler.debt %}
+          {% with d = supplier.debt %}
           <td class="balance" data-order="{{ d }}">
           {% if d %}{{ d|moneyfmt(curr='$ ') }}{% else %}&mdash;{% endif %}
           </td>
