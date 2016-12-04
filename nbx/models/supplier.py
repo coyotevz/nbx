@@ -25,7 +25,7 @@ class Supplier(Entity):
 
     payment_term = db.Column(db.Integer) # in days
     leap_time = db.Column(db.Integer) # in days
-    delivery_included = db.Column(db.Boolean, default=False)
+    delivery_included = db.Column(db.Boolean)
 
     supplier_contacts = db.relationship('SupplierContact',
                                         cascade='all, delete-orphan',
@@ -48,6 +48,12 @@ class Supplier(Entity):
 
 #    products = association_proxy('products_info', 'product')
 
+    def __init__(self):
+        # Sets defaults to instance
+        self.delivery_included = False
+        self.debt = Decimal(0)
+        self.expired = Decimal(0)
+
 
     def add_contact(self, contact, role):
         self.supplier_contacts.append(SupplierContact(contact, role))
@@ -66,14 +72,6 @@ class Supplier(Entity):
             self.expiration_date = doc.expiration_date
         else:
             self.expiration_date = None
-
-
-@db.event.listens_for(Supplier, "init")
-def init(target, args, kwargs):
-    if 'debt' not in kwargs:
-        target.debt = 0
-    if 'expired' not in kwargs:
-        target.expired = 0
 
 
 class SupplierContact(db.Model):
