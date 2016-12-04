@@ -34,7 +34,7 @@ def edit(supplier_id=None):
     if form.validate_on_submit():
         form.populate_obj(supplier)
         if not supplier.id:
-            supplier.id = None
+            supplier.id = None  # ????
             db.session.add(supplier)
         db.session.commit()
         flash(msg)

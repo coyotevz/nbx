@@ -25,7 +25,8 @@ body {
     padding-bottom: 9px;
     border-bottom: 1px solid $page-header-border-color;
 
-    .form-control {
+    .form-control,
+    .btn {
       margin-top: 16px;
     }
   }
