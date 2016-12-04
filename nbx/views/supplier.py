@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, url_for, flash, request, make_response
-from flask import Blueprint
+from flask import (Blueprint, flash, make_response, redirect, render_template,
+                   request, url_for)
 from werkzeug.urls import url_unquote
 
-from nbx.models import db, Entity, Supplier, Product, ProductSupplierInfo, PurchaseOrder, Document, BankAccount
-from nbx.forms import SupplierForm, ProductSupplierForm
+from nbx.forms import ProductSupplierForm, SupplierForm
+from nbx.models import (BankAccount, Document, Entity, Product,
+                        ProductSupplierInfo, PurchaseOrder, Supplier, db)
 
 supplier = Blueprint('supplier', __name__)
 
