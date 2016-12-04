@@ -61,13 +61,17 @@ class Supplier(Entity):
         return "{0}{1}".format(self.rz, n)
 
     def _update_expiration_date(self):
-        doc = self.documents.filter(Document.doc_status.in_([Document.STATUS_PENDING, Document.STATUS_EXPIRED])).order_by(Document.expiration_date.asc()).first()
+        doc = self.documents\
+                .filter(Document.doc_status.in_([Document.STATUS_PENDING,
+                                                 Document.STATUS_EXPIRED]))\
+                .order_by(Document.expiration_date.asc())\
+                .first()
         if doc:
             self.expiration_date = doc.expiration_date
         else:
             self.expiration_date = None
 
-@db.events.listen_for(Supplier, "init")
+@db.event.listens_for(Supplier, "init")
 def supplier_init(target, args, kwargs):
     # Sets defaults to instance
     if 'delivery_included' not in kwargs:
