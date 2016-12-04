@@ -17,6 +17,13 @@ body {
   }
 }
 
+h2,
+h3 {
+  .btn {
+    margin-left: 15px;
+  }
+}
+
 .main {
 
   .section-header {
@@ -26,7 +33,7 @@ body {
     border-bottom: 1px solid $page-header-border-color;
 
     .form-control,
-    .btn {
+    .btn-control {
       margin-top: 16px;
     }
   }
