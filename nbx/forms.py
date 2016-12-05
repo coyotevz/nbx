@@ -34,10 +34,13 @@ class LocaleDecimalField(DecimalField):
 
 class SupplierForm(FlaskForm):
     id = HiddenField()
-    rz = TextField(u'Razón Social', validators=[Required()])
-    name = TextField(u'Nombre')
-    cuit = TextField('CUIT')
+    rz = TextField('Razón Social', validators=[Required()])
+    name = TextField('Nombre')
     notes = TextAreaField('Notas')
+
+    payment_term = IntegerField('Plazo de pago')
+    leap_time = IntegerField('Plazo de entrega')
+    delivery_included = BooleanField('Incluye flete')
 
 
 class ProductForm(FlaskForm):
