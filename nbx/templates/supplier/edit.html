@@ -7,19 +7,21 @@
 </div>
 <form id="edit-supplier" method="post" action="." class="form-horizontal">
   {{ form.hidden_tag() }}
-  <div class="col-sm-9">
-  {{ render_horizontal_field(form.rz, 9) }}
-  {{ render_horizontal_field(form.name, 9) }}
-  </div>
-  <div class="col-sm-3">
-  {{ render_horizontal_field(form.payment_term, 4) }}
-  {{ render_horizontal_field(form.delivery_included, 4) }}
+  <div class="row">
+    <div class="col-sm-9">
+      {{ render_horizontal_field(form.rz, 9) }}
+      {{ render_horizontal_field(form.name, 9) }}
+    </div>
+    <div class="col-sm-3">
+      {{ render_horizontal_field(form.payment_term, 4) }}
+      {{ render_horizontal_field(form.delivery_included, 4) }}
+    </div>
   </div>
 
-  <div class="form-group">
-    <button type="submit" class="btn btn-default">Guardar</button>
+  <div class="row">
+    <div class="form-group">
+      <button type="submit" class="btn btn-default">Guardar</button>
+    </div>
   </div>
 </form>
-
-{{ form.errors }}
 {% endblock %}

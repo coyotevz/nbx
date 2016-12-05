@@ -6,10 +6,12 @@ import locale
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, DateField, DecimalField, FormField,
                      HiddenField, IntegerField, PasswordField, TextAreaField,
-                     TextField, SubmitField, widgets)
+                     TextField, SubmitField, SelectField, widgets)
 from wtforms.ext.sqlalchemy.fields import (QuerySelectField,
                                            QuerySelectMultipleField)
 from wtforms.validators import (Length, NumberRange, Optional, Required)
+
+from nbx.models.fiscal import FiscalData
 
 locale.setlocale(locale.LC_ALL, '')
 
@@ -32,6 +34,16 @@ class LocaleDecimalField(DecimalField):
             return retval
 
 
+class FiscalDataForm(FlaskForm):
+    id = HiddenField()
+    cuit = TextField('CUIT')
+    iibb = TextField('IIBB')
+    fiscal_type = SelectField(
+        'Insc. IVA',
+        choices=[(k, v) for k, v in FiscalData._fiscal_types.items()]
+    )
+
+
 class SupplierForm(FlaskForm):
     id = HiddenField()
     rz = TextField('Razón Social', validators=[Required()])
@@ -41,6 +53,8 @@ class SupplierForm(FlaskForm):
     payment_term = IntegerField('Plazo de pago')
     leap_time = IntegerField('Plazo de entrega')
     delivery_included = BooleanField('Incluye flete')
+
+    fiscal_data = FormField(FiscalDataForm)
 
 
 class ProductForm(FlaskForm):
