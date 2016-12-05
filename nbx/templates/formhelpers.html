@@ -8,7 +8,7 @@
 
 {% macro render_horizontal_field(field, width=10) %}
 <div class="form-group {{ field.id }}">
-  {% if field.label %}{{ field.label(class="col-sm-" + (12 - width) + " control-label") }}{% endif %}
+  {% if field.label %}{{ field.label(class="col-sm-" ~ (12 - width) ~ " control-label") }}{% endif %}
   <div class="col-sm-{{ width }}">
   {{ field(class="form-control") }}
   </div>
