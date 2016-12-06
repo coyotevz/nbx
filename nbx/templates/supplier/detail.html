@@ -50,7 +50,26 @@
         </table>
       </div>
       <div role="tabpanel" class="tab-pane" id="orders">
-        Orders panel
+        <table id="supplier-orders" class="table table-hover table-condensed">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Pedido</th>
+              <th>Estado</th>
+              <th>Método</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in supplier.orders %}
+              <tr>
+                <td>{{ order.open_date }}</td>
+                <td>{{ order.full_desc }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.method }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       <div role="tabpanel" class="tab-pane" id="detail">
         <div class="row">
