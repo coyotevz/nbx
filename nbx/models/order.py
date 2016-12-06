@@ -12,7 +12,7 @@ class PurchaseOrder(db.Model, TimestampMixin):
     STATUS_PENDING = 'STATUS_PENDING'
     STATUS_PARTIAL = 'STATUS_PARTIAL'
     STATUS_CONFIRMED = 'STATUS_CONFIRMED'
-    STATUS_CLOSED = 'STATUS_CLOSED'
+    STATUS_COMPLETED = 'STATUS_COMPLETED'
     STATUS_DRAFT = 'STATUS_DRAFT'
 
     _po_status = {
@@ -21,7 +21,7 @@ class PurchaseOrder(db.Model, TimestampMixin):
         STATUS_PENDING: 'Pendiente',
         STATUS_PARTIAL: 'Parcial',
         STATUS_CONFIRMED: 'Confirmada',
-        STATUS_CLOSED: 'Cerrada',
+        STATUS_COMPLETED: 'Completa',
         STATUS_DRAFT: 'Borrador',
     }
 
@@ -38,7 +38,8 @@ class PurchaseOrder(db.Model, TimestampMixin):
     }
 
     id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.Integer)
+    point_sale = db.Column(db.Integer, nullable=False)
+    number = db.Column(db.Integer, nullable=False)
     po_status = db.Column(db.Enum(*_po_status.keys(), name='po_status'),
                           default=STATUS_DRAFT)
     po_method = db.Column(db.Enum(*_po_method.keys(), name='po_method'),
@@ -60,6 +61,12 @@ class PurchaseOrder(db.Model, TimestampMixin):
     @property
     def method(self):
         return self._po_method[self.po_method]
+
+    @property
+    def full_desc(self):
+        if self.point_sale == 0:
+            return "Pedido 0-%04d-%08" % (self.supplier_id, self.number)
+        return "Pedido %04d-%08d" % (self.point_sale, self.number)
 
 
 class PurchaseOrderItem(db.Model):

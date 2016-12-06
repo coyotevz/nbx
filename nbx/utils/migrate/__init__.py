@@ -39,7 +39,7 @@ doc_type_map = {
 }
 
 po_status_map = {
-    'Pedido sin Pendientes': PurchaseOrder.STATUS_CLOSED,
+    'Pedido sin Pendientes': PurchaseOrder.STATUS_COMPLETED,
     'Articulos Pendientes': PurchaseOrder.STATUS_PARTIAL,
     'Pendiente de Entrega': PurchaseOrder.STATUS_CONFIRMED,
     'No Realizado': PurchaseOrder.STATUS_DRAFT,
@@ -72,6 +72,7 @@ def migrate_document(s, f, supplier):
 
 def migrate_order(s, p, supplier):
     po = PurchaseOrder(number=p.numero_pedido,
+                       point_sale=0,
                        po_status=po_status_map[p.estado_de_pedido],
                        notes=p.comentario,
                        open_date=check_year(p.fecha_de_pedido),
