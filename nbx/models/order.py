@@ -7,70 +7,74 @@ from nbx.models.misc import TimestampMixin
 class PurchaseOrder(db.Model, TimestampMixin):
     __tablename__ = 'purchaseorder'
 
-    (ORDER_CANCELLED,
-     ORDER_QUOTING,
-     ORDER_PENDING,
-     ORDER_CONFIRMED,
-     ORDER_CLOSED) = range(5)
+    STATUS_CANCELLED = 'STATUS_CANCELLED'
+    STATUS_QUOTING = 'STATUS_QUOTING'
+    STATUS_PENDING = 'STATUS_PENDING'
+    STATUS_PARTIAL = 'STATUS_PARTIAL'
+    STATUS_CONFIRMED = 'STATUS_CONFIRMED'
+    STATUS_CLOSED = 'STATUS_CLOSED'
+    STATUS_DRAFT = 'STATUS_DRAFT'
 
-    statuses = { ORDER_CANCELLED: u'Cancelled',
-                 ORDER_QUOTING: u'Quoting',
-                 ORDER_PENDING: u'Pending',
-                 ORDER_CONFIRMED: u'Confirmed',
-                 ORDER_CLOSED: u'Closed'
-               }
+    _po_status = {
+        STATUS_CANCELLED: 'Cancelada',
+        STATUS_QUOTING: 'Valorizando',
+        STATUS_PENDING: 'Pendiente',
+        STATUS_PARTIAL: 'Parcial',
+        STATUS_CONFIRMED: 'Confirmada',
+        STATUS_CLOSED: 'Cerrada',
+        STATUS_DRAFT: 'Borrador',
+    }
+
+    METHOD_EMAIL = 'METHOD_EMAIL'
+    METHOD_FAX = 'METHOD_FAX'
+    METHOD_PHONE = 'METHOD_PHONE'
+    METHOD_PERSONALLY = 'METHOD_PERSONALLY'
+
+    _po_method = {
+        METHOD_EMAIL: 'Correo Electrónico',
+        METHOD_FAX: 'Fax',
+        METHOD_PHONE: 'Telefónico',
+        METHOD_PERSONALLY: 'Personalmente',
+    }
 
     id = db.Column(db.Integer, primary_key=True)
-    _status = db.Column("status", db.Integer, default=ORDER_QUOTING)
-    open_date = db.Column(db.Date)
-    expected_receival_date = db.Column(db.Date)
-    receival_date = db.Column(db.Date)
-    confirm_date = db.Column(db.Date)
+    number = db.Column(db.Integer)
+    po_status = db.Column(db.Enum(*_po_status.keys(), name='po_status'),
+                          default=STATUS_DRAFT)
+    po_method = db.Column(db.Enum(*_po_method.keys(), name='po_method'),
+                          default=None)
     notes = db.Column(db.UnicodeText)
+
+
+    open_date = db.Column(db.Date)
+    confirm_date = db.Column(db.Date)
+    receival_date = db.Column(db.Date)
 
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.supplier_id'), nullable=False)
     supplier = db.relationship('Supplier', backref="orders")
 
     @property
-    def number(self):
-        return self.id
+    def status(self):
+        return self._po_status[self.po_status]
 
     @property
-    def status_str(self):
-        status = self._status
-        if not status in PurchaseOrder.statuses:
-            raise Exception('Got an unexpected status value: %s' % status)
-        return PurchaseOrder.statuses[status]
-
-    @property
-    def amount(self):
-        return db.session.query(db.func.sum(PurchaseOrderItem.quantity*PurchaseOrderItem.cost)).filter(PurchaseOrderItem.order==self).scalar()
+    def method(self):
+        return self._po_method[self.po_method]
 
 
 class PurchaseOrderItem(db.Model):
     __tablename__ = 'purchaseorder_item'
 
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer, default=1)
+    sku = db.Column(db.Unicode(40))
+    description = db.Column(db.UnicodeText)
+    quantity = db.Column(db.Integer, default=0)
     quantity_received = db.Column(db.Integer, default=0)
-    quantity_returned = db.Column(db.Integer)
-    base_cost = db.Column(db.Numeric(10, 2))
-    cost = db.Column(db.Numeric(10, 2))
+    quantity_returned = db.Column(db.Integer, default=0)
 
-    # sellable_id = db.Column(db.Integer, db.ForeignKey('sellable.id'))
-    order_id = db.Column(db.Integer, db.ForeignKey('purchaseorder.id'), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('purchaseorder.id'),
+                         nullable=False)
     order = db.relationship('PurchaseOrder', backref='items')
-
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    product = db.relationship('Product', backref='order_items')
-
-    @property
-    def total(self):
-        return self.quantity * self.cost
-
-    @property
-    def received_total(self):
-        return self.quantity_received * self.cost
 
     @property
     def pending_quantity(self):
