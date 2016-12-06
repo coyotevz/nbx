@@ -7,6 +7,7 @@ from os import path
 from flask import Flask, g
 from flask_assets import Bundle, Environment
 from flask_principal import Principal, identity_loaded
+from nbx.api import configure_api
 from nbx.jinjafilters import (cuitfmt_filter, dateformat_filter,
                               moneyfmt_filter, timeago_filter)
 from nbx.models import User, db
@@ -35,6 +36,7 @@ def create_app(config=None, app_name=None):
     configure_identity(app)
 
     configure_blueprints(app)
+    configure_api(app)
 
     return app
 
