@@ -14,7 +14,7 @@ import click
 # new app
 from nbx.application import create_app
 from nbx.models import (Address, Contact, Document, Email, FiscalData, Phone,
-                        Supplier, db)
+                        Supplier, PurchaseOrder, PurchaseOrderItem, db)
 from sqlalchemy import func
 
 # old app
@@ -38,6 +38,19 @@ doc_type_map = {
     'Presupuesto': Document.TYPE_PRESUPUESTO,
 }
 
+po_status_map = {
+    'Pedido sin Pendientes': PurchaseOrder.STATUS_CLOSED,
+    'Articulos Pendientes': PurchaseOrder.STATUS_PARTIAL,
+    'Pendiente de Entrega': PurchaseOrder.STATUS_CONFIRMED,
+    'No Realizado': PurchaseOrder.STATUS_DRAFT,
+}
+
+po_method_map = {
+    'Fax': PurchaseOrder.METHOD_FAX,
+    'Personalmente': PurchaseOrder.METHOD_PERSONALLY,
+    'e-mail': PurchaseOrder.METHOD_EMAIL,
+}
+
 # NOTE:
 # ~~~~
 # PedidoSub --> PurchaseOrder
@@ -57,8 +70,25 @@ def migrate_document(s, f, supplier):
                    doc_status=doc_status)
     supplier.documents.append(doc)
 
-def migrate_order(s, pedido, supplier):
-    pass
+def migrate_order(s, p, supplier):
+    po = PurchaseOrder(number=p.numero_pedido,
+                       po_status=po_status_map[p.estado_de_pedido],
+                       notes=p.comentario,
+                       open_date=check_year(p.fecha_de_pedido),
+                       po_method=po_method_map[p.medio_de_pedido],
+                       supplier=supplier)
+
+    items = s.query(Pedido).filter(Pedido.id_proveedor==p.id_proveedor)\
+                           .filter(Pedido.numero_pedido==p.numero_pedido)
+
+    for item in items:
+        poi = PurchaseOrderItem(sku=item.codigo,
+                                description=item.descripcion,
+                                quantity=item.cantidad,
+                                quantity_received=item.cantidad_recibida,
+                                order=po)
+    db.session.add(po)
+
 
 def migrate_bank_account(s, cuenta, supplier):
     pass
