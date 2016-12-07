@@ -4,7 +4,7 @@ import locale
 import os
 from os import path
 
-from flask import Flask, g
+from flask import Flask, g, request
 from flask_assets import Bundle, Environment
 from flask_principal import Principal, identity_loaded
 from nbx.api import configure_api
@@ -62,6 +62,17 @@ def configure_app(app, config=None):
     if os.getenv('FLASK_DEBUG') in ('1', 'True', 'TRUE'):
         from flask_debugtoolbar import DebugToolbarExtension
         DebugToolbarExtension(app)
+
+    @app.after_request
+    def add_cors_headers(response):
+        if 'Origin' in request.headers:
+
+            a = response.headers.add
+            a('Access-Control-Allow-Origin', request.headers['Origin'])
+            a('Access-Control-Allow-Credentials', 'true')
+            a('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+            a('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+        return response
 
 
 
