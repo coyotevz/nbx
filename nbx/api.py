@@ -40,6 +40,7 @@ class SupplierResource(ModelResource):
         model = Supplier
         name = 'suppliers'
         exclude_fields = ['entity_type']
+        include_id = True
 
     class Schema:
         rz = fields.String(attribute='_name_1')
