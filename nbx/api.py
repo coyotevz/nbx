@@ -17,6 +17,7 @@ class DocumentResource(ModelResource):
 
     class Schema:
         supplier = fields.ToOne('suppliers')
+        full_desc = fields.String(io='r')
 
 
 class ContactResource(ModelResource):
