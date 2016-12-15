@@ -72,6 +72,7 @@ def configure_app(app, config=None):
             a('Access-Control-Allow-Credentials', 'true')
             a('Access-Control-Allow-Headers', 'Content-Type,Authorization')
             a('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+            a('Access-Control-Expose-Headers', 'Link,X-Total-Count')
         return response
 
 
