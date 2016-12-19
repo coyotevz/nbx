@@ -4,7 +4,7 @@ from flask_potion import Api, ModelResource, fields
 from flask_potion.contrib.alchemy.fields import InlineModel
 from flask_potion.routes import Relation
 
-from nbx.models import Supplier, Document, Contact, PurchaseOrder
+from nbx.models import Supplier, Document, Contact, PurchaseOrder, Address
 
 
 api = Api(prefix='/api')
@@ -28,6 +28,7 @@ class DocumentResource(ModelResource):
 
 
 class ContactResource(ModelResource):
+
 
     class Meta:
         model = Contact
@@ -54,6 +55,14 @@ class SupplierResource(ModelResource):
     class Schema:
         rz = fields.String(attribute='_name_1')
         name = fields.String(attribute='_name_2')
+        address = fields.List(InlineModel({
+            'street': fields.String(),
+            'streetnumber': fields.String(),
+            'city': fields.String(),
+            'province': fields.String(),
+            'zip_code': fields.String(),
+            'address_type': fields.String(),
+        }, model=Address))
 
 
 class OrderResource(ModelResource):
