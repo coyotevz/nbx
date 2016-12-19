@@ -14,9 +14,9 @@ class Document(db.Model, TimestampMixin):
     TYPE_PRESUPUESTO = 'TYPE_PRESUPUESTO'
 
     _doc_type = {
-        TYPE_FACTURA_A: 'Factura A',
-        TYPE_NOTA_CREDITO_A: 'Nota de Crédito',
-        TYPE_PRESUPUESTO: 'Presupuesto',
+        TYPE_FACTURA_A: ('Factura A', 'FAC'),
+        TYPE_NOTA_CREDITO_A: ('Nota de Crédito', 'NCR'),
+        TYPE_PRESUPUESTO: ('Presupuesto', 'PRE'),
     }
 
     STATUS_PENDING = 'STATUS_PENDING'
@@ -56,15 +56,19 @@ class Document(db.Model, TimestampMixin):
 
     @property
     def type(self):
-        return self._doc_type.get(self.doc_type)
+        return self._doc_type.get(self.doc_type)[0]
+
+    @property
+    def short_type(self):
+        return self._doc_type.get(self.doc_type)[1]
 
     @property
     def status(self):
         return self._doc_status.get(self.doc_status)
 
     @property
-    def full_desc(self):
-        return u"%s %04d-%08d" % (self.type, self.point_sale, self.number)
+    def full_number(self):
+        return "{:04d}-{:08d}".format(self.point_sale, self.number)
 
     @property
     def cancelled_date(self):

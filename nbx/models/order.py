@@ -65,8 +65,8 @@ class PurchaseOrder(db.Model, TimestampMixin):
     @property
     def full_desc(self):
         if self.point_sale == 0:
-            return "Pedido 0-%04d-%08d" % (self.supplier_id, self.number)
-        return "Pedido %04d-%08d" % (self.point_sale, self.number)
+            return "Pedido {:<04d}S-{:08d}".format(self.supplier_id, self.number)
+        return "Pedido {:04d}-{:08d}".format(self.point_sale, self.number)
 
 
 class PurchaseOrderItem(db.Model):
