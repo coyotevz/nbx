@@ -11,11 +11,13 @@ from datetime import date
 from decimal import Decimal
 
 import click
+from sqlalchemy import func
+
 # new app
 from nbx.application import create_app
-from nbx.models import (Address, Contact, Document, Email, FiscalData, Phone,
-                        Supplier, PurchaseOrder, PurchaseOrderItem, db)
-from sqlalchemy import func
+from nbx.models import (Address, Bank, BankAccount, Contact, Document, Email,
+                        FiscalData, Phone, PurchaseOrder, PurchaseOrderItem,
+                        Supplier, db)
 
 # old app
 from .proveedores import (Comentario, CuentaBanco, Factura, Pedido, PedidoSub,
@@ -31,6 +33,11 @@ def check_year(date):
 
 def _cuit(cuit):
     return cuit.replace('-','')
+
+def _(value):
+    if hasattr(value, 'strip'):
+        return value.strip()
+    return value
 
 doc_type_map = {
     'Factura A': Document.TYPE_FACTURA_A,
@@ -66,7 +73,7 @@ def migrate_document(s, f, supplier):
                    point_sale=1, # no information about this
                    number=f.numero_factura,
                    total=Decimal(f.monto),
-                   notes=f.descripcion if f.hay_coment == 'Si' else None,
+                   notes=_(f.descripcion) if f.hay_coment == 'Si' else None,
                    doc_status=doc_status)
     supplier.documents.append(doc)
 
@@ -74,7 +81,7 @@ def migrate_order(s, p, supplier):
     po = PurchaseOrder(number=p.numero_pedido,
                        point_sale=0,
                        po_status=po_status_map[p.estado_de_pedido],
-                       notes=p.comentario,
+                       notes=_(p.comentario),
                        open_date=check_year(p.fecha_de_pedido),
                        po_method=po_method_map[p.medio_de_pedido],
                        supplier=supplier)
@@ -83,16 +90,27 @@ def migrate_order(s, p, supplier):
                            .filter(Pedido.numero_pedido==p.numero_pedido)
 
     for item in items:
-        poi = PurchaseOrderItem(sku=item.codigo,
-                                description=item.descripcion,
+        poi = PurchaseOrderItem(sku=_(item.codigo),
+                                description=_(item.descripcion),
                                 quantity=item.cantidad,
                                 quantity_received=item.cantidad_recibida,
                                 order=po)
     db.session.add(po)
 
 
-def migrate_bank_account(s, cuenta, supplier):
-    pass
+def migrate_bank_account(s, cb, supplier):
+    bank_name, owner, acc_type, acc_number = [_(c.split(':', 1)[-1]) for c in cb.cuenta.split(' >  ')]
+    b = Bank.query.filter(Bank.name==bank_name).first()
+    if not b:
+        b = Bank(name=bank_name)
+        db.session.add(b)
+        db.session.commit()
+    account = BankAccount(acc_type=acc_type,
+                          number=acc_number,
+                          owner=owner,
+                          bank=b,
+                          entity=supplier)
+    db.session.add(account)
 
 def migrate_suppliers(s):
     tot = s.query(func.count(Proveedor.id)).scalar()
@@ -104,40 +122,42 @@ def migrate_suppliers(s):
                     .value('comentario')
             delivery = p.flete.startswith('A Cargo del Proveedor')
 
-            supplier = Supplier(rz=p.nombre,
-                                web=p.web,
+            supplier = Supplier(rz=_(p.nombre),
+                                web=_(p.web),
                                 sup_type=Supplier.TYPE_PRODUCTS,
                                 payment_term=p.plazo,
                                 delivery_included=delivery,
-                                notes = notes if notes else None)
+                                notes = _(notes) if notes else None)
             if p.cuit:
-                fiscal = FiscalData(cuit=_cuit(p.cuit), iibb=p.ingresosBrutos,
-                        fiscal_type=FiscalData.FISCAL_RESPONSABLE_INSCRIPTO)
+                fiscal = FiscalData(
+                    cuit=_cuit(p.cuit),
+                    iibb=_(p.ingresosBrutos),
+                    fiscal_type=FiscalData.FISCAL_RESPONSABLE_INSCRIPTO)
                 supplier.fiscal_data = fiscal
             if p.email:
                 email = Email(email_type='Principal',
-                              email=p.email)
+                              email=_(p.email))
                 supplier.email.append(email)
             if p.fax:
                 fax = Phone(phone_type='FAX',
-                            number=p.fax)
+                            number=_(p.fax))
                 supplier.phone.append(fax)
             if p.direccion:
-                address = Address(street=p.direccion,
+                address = Address(street=_(p.direccion),
                                   province='<unknown>',
-                                  zip_code=p.codigo_postal)
+                                  zip_code=_(p.codigo_postal))
                 supplier.address.append(address)
 
             if p.nombre_contacto:
                 fn, ln = (p.nombre_contacto.rsplit(' ', 1) + [None])[:2]
-                contact = Contact(first_name=fn, last_name=ln)
+                contact = Contact(first_name=_(fn), last_name=_(ln))
                 if p.telefono_contacto:
                     phone = Phone(phone_type='Principal',
-                                  number=p.telefono_contacto)
+                                  number=_(p.telefono_contacto))
                     contact.phone.append(phone)
                 if p.email_contacto:
                     email = Email(email_type='Principal',
-                                  email=p.email_contacto)
+                                  email=_(p.email_contacto))
                     contact.email.append(email)
                 supplier.add_contact(contact, 'Importado')
 

@@ -3,9 +3,8 @@
 from flask_potion import Api, ModelResource, fields
 from flask_potion.contrib.alchemy.fields import InlineModel
 from flask_potion.routes import Relation
-
-from nbx.models import Supplier, Document, Contact, PurchaseOrder, Address
-
+from nbx.models import (Address, Bank, BankAccount, Contact, Document,
+                        PurchaseOrder, Supplier)
 
 api = Api(prefix='/api')
 
@@ -63,6 +62,17 @@ class SupplierResource(ModelResource):
             'zip_code': fields.String(),
             'address_type': fields.String(),
         }, model=Address))
+        bank_accounts = fields.List(InlineModel({
+            'bank': InlineModel({
+                '$id': fields.Integer(attribute='id'),
+                'name': fields.String(),
+            }, model=Bank),
+            'branch': fields.String(),
+            'acc_type': fields.String(),
+            'number': fields.String(),
+            'owner': fields.String(),
+            'cbu': fields.String(),
+        }, model=BankAccount))
 
 
 class OrderResource(ModelResource):
