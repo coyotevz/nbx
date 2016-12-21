@@ -99,12 +99,16 @@ def migrate_suppliers(s):
     with click.progressbar(s.query(Proveedor), length=tot,
                            label='* Migrate proveedores') as proveedores:
         for p in proveedores:
-            notes = s.query(Comentario).filter(Comentario.id_coment_proveedor==p.id).value('comentario')
+            notes = s.query(Comentario)\
+                    .filter(Comentario.id_coment_proveedor==p.id)\
+                    .value('comentario')
+            delivery = p.flete.startswith('A Cargo del Proveedor')
 
             supplier = Supplier(rz=p.nombre,
                                 web=p.web,
+                                sup_type=Supplier.TYPE_PRODUCTS,
                                 payment_term=p.plazo,
-                                delivery_included=p.flete.startswith('A Cargo del Proveedor'),
+                                delivery_included=delivery,
                                 notes = notes if notes else None)
             if p.cuit:
                 fiscal = FiscalData(cuit=_cuit(p.cuit), iibb=p.ingresosBrutos,

@@ -13,11 +13,24 @@ class Supplier(Entity):
     __tablename__ = 'supplier'
     __mapper_args__ = {'polymorphic_identity': 'supplier'}
 
+    TYPE_PRODUCTS = 'TYPE_PRODUCTS'
+    TYPE_SERVICES = 'TYPE_SERVICES'
+    TYPE_SUPPLIES = 'TYPE_SUPPLIES'
+
+    _sup_type = {
+        TYPE_PRODUCTS: 'Productos',
+        TYPE_SERVICES: 'Servicios',
+        TYPE_SUPPLIES: 'Insumos',
+    }
+
     supplier_id = db.Column(db.Integer, db.ForeignKey('entity.id'),
                             primary_key=True)
     rz = Entity._name_1
     name = Entity._name_2
     web = db.Column(db.Unicode, default=None)
+
+    sup_type = db.Column(db.Enum(*_sup_type.keys(), name='supplier_type'),
+                         default=TYPE_PRODUCTS)
 
     fiscal_data_id = db.Column(db.Integer, db.ForeignKey('fiscal_data.id'))
     fiscal_data = db.relationship(FiscalData,
@@ -54,6 +67,10 @@ class Supplier(Entity):
 
 #    def add_product(self, product, **kwargs):
 #        self.products_info.append(ProductSupplierInfo(product=product, **kwargs))
+
+    @property
+    def type(self):
+        return self._sup_type.get(self.sup_type)
 
     @property
     def full_name(self):
