@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from sqlalchemy.orm import validates
+
 from nbx.models import db
+from nbx.utils.validators import validate_cuit
 
 
 class FiscalData(db.Model):
@@ -23,6 +26,11 @@ class FiscalData(db.Model):
     fiscal_type = db.Column(db.Enum(*_fiscal_types.keys(), name='fiscal_type'),
                             default=FISCAL_CONSUMIDOR_FINAL)
     iibb = db.Column(db.Unicode, nullable=True)
+
+    @validates('cuit')
+    def cuit_is_valid(self, key, cuit):
+        if not validate_cuit(cuit):
+            raise ValueError('CUIT invalid')
 
     @property
     def needs_cuit(self):
