@@ -37,11 +37,6 @@ class BankAccount(db.Model):
     entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'), nullable=False)
     entity = db.relationship('Entity', backref='bank_accounts', lazy='joined')
 
-    #supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.supplier_id'),
-    #                        nullable=False)
-    #supplier = db.relationship('Supplier', backref='bank_accounts',
-    #                           lazy='joined')
-
     @validates('cbu')
     def cbu_is_valid(self, key, cbu):
         if not validate_cbu(cbu):
