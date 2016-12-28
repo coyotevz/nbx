@@ -18,6 +18,7 @@ from nbx.application import create_app
 from nbx.models import (Address, Bank, BankAccount, Contact, Document, Email,
                         FiscalData, Phone, PurchaseOrder, PurchaseOrderItem,
                         Supplier, db)
+from nbx.utils.validators import validate_cuit
 
 # old app
 from .proveedores import (Comentario, CuentaBanco, Factura, Pedido, PedidoSub,
@@ -129,11 +130,14 @@ def migrate_suppliers(s):
                                 delivery_included=delivery,
                                 notes = _(notes) if notes else None)
             if p.cuit:
-                fiscal = FiscalData(
-                    cuit=_cuit(p.cuit),
-                    iibb=_(p.ingresosBrutos),
-                    fiscal_type=FiscalData.FISCAL_RESPONSABLE_INSCRIPTO)
-                supplier.fiscal_data = fiscal
+                if validate_cuit(p.cuit):
+                    fiscal = FiscalData(
+                        cuit=_cuit(p.cuit),
+                        iibb=_(p.ingresosBrutos),
+                        fiscal_type=FiscalData.FISCAL_RESPONSABLE_INSCRIPTO)
+                    supplier.fiscal_data = fiscal
+                else:
+                    print('Cuit invalido: {}, de {}'.format(p.cuit, p.nombre))
             if p.email:
                 email = Email(email_type='Principal',
                               email=_(p.email))
