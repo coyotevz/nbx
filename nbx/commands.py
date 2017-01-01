@@ -84,23 +84,6 @@ def dropdb():
 
 
 @app.cli.command()
-def loadfix():
-    """Load fixtures located in fixtures files."""
-    import os.path
-    import glob
-    from nbx.utils.fixtures import load_yaml, load_fixtures
-    if click.confirm('Are you sure? You will lose all your data!'):
-        db.drop_all()
-        db.create_all()
-
-        for fixture_dir in app.config.get('FIXTURES_DIRS', ['./tests/fixtures/']):
-            for fixture_file in glob.glob(fixture_dir + '/*.yaml'):
-                print("loading fixtures from '{}'".format(fixture_file))
-                fixtures = load_yaml(fixture_file)
-                load_fixtures(db, fixtures)
-
-
-@app.cli.command()
 def migrate():
     """Migrate from a database for old application"""
     from nbx.utils.migrate import migrate_suppliers, configure_session

@@ -1,7 +1,7 @@
 Flask-Principal
 Flask-SQLAlchemy
 Flask-WTF
-flask-potion
+Flask-Potion
 
 # postgresql connector
 psycopg2
