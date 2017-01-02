@@ -3,7 +3,7 @@
 from decimal import Decimal
 from nbx.application import create_app
 from nbx.models import (
-    db, Address, Phone, Email, Comment, Entity, User, Contact, Supplier,
+    db, Address, Phone, Email, Entity, User, Contact, Supplier,
     SupplierContact, Document, Payment, DocumentPayment, BankAccount,
     PurchaseOrder, PurchaseOrderItem, Product, ProductSupplierInfo,
 )

@@ -5,17 +5,9 @@ import os
 from os import path
 
 from flask import Flask, g, request
-from flask_assets import Bundle, Environment
 from flask_principal import Principal, identity_loaded
 from nbx.api import configure_api
-from nbx.jinjafilters import (cuitfmt_filter, dateformat_filter,
-                              moneyfmt_filter, timeago_filter)
 from nbx.models import User, db
-from nbx.views import account, order, product, supplier
-from webassets.filter import get_filter
-
-locale.setlocale(locale.LC_ALL, '')
-
 
 __all__ = ['create_app']
 
@@ -30,12 +22,9 @@ def create_app(config=None, app_name=None):
     app = Flask(app_name)
 
     configure_app(app, config)
-    configure_jinja2(app)
-    configure_webassets(app)
     configure_db(app)
     configure_identity(app)
 
-    configure_blueprints(app)
     configure_api(app)
 
     return app
@@ -59,10 +48,6 @@ def configure_app(app, config=None):
                 app.config.from_object('nbx.config.ProductionConfig')
                 app.logger.info("Config: Production")
 
-    if os.getenv('FLASK_DEBUG') in ('1', 'True', 'TRUE'):
-        from flask_debugtoolbar import DebugToolbarExtension
-        DebugToolbarExtension(app)
-
     @app.after_request
     def add_cors_headers(response):
         if 'Origin' in request.headers:
@@ -82,86 +67,6 @@ def configure_app(app, config=None):
         return response
 
 
-
-def configure_jinja2(app):
-    # Jinja2 extensions
-    app.jinja_options['extensions'].extend([
-        'jinja2.ext.i18n',
-        'jinja2.ext.do',
-        'jinja2.ext.loopcontrols',
-    ])
-
-    # Jinja2 filters
-    app.jinja_env.filters['dateformat'] = dateformat_filter
-    app.jinja_env.filters['timeago'] = timeago_filter
-    app.jinja_env.filters['moneyfmt'] = moneyfmt_filter
-    app.jinja_env.filters['cuitfmt'] = cuitfmt_filter
-
-
-def configure_webassets(app):
-    # Fask-Assets
-    assets = Environment(app)
-    assets_out_dir = app.config.get('ASSETS_OUTPUT_DIR')
-    # ensure output directory exists
-    if not path.exists(path.join(app.static_folder, assets_out_dir)):
-        app.logger.info("Creating assets output folder")
-        os.mkdir(path.join(app.static_folder, assets_out_dir))
-
-    # webassets bundles
-
-    jquery_bundle = Bundle(
-        'js/libs/jquery-3.1.1.js',
-    )
-
-    datatable_bundle = Bundle(
-        'js/libs/jquery.dataTables.js',
-        'js/libs/dataTables.bootstrap.js',
-    )
-
-    js_bootstrap_bundle = Bundle(
-        'js/bootstrap/transition.js',
-        'js/bootstrap/alert.js',
-        'js/bootstrap/button.js',
-        'js/bootstrap/carousel.js',
-        'js/bootstrap/collapse.js',
-        'js/bootstrap/dropdown.js',
-        'js/bootstrap/modal.js',
-        'js/bootstrap/tab.js',
-        'js/bootstrap/affix.js',
-        'js/bootstrap/scrollspy.js',
-        'js/bootstrap/tooltip.js',
-        'js/bootstrap/popover.js',
-    )
-
-    js_bundle = Bundle(
-        jquery_bundle,
-        datatable_bundle,
-        js_bootstrap_bundle,
-        filters='jsmin',
-        output=path.join(assets_out_dir, 'js_bundle.js')
-    )
-
-    scss = get_filter('scss', load_paths=['style'])
-
-    scss_bundle = Bundle(
-        'style/master.scss',
-        filters=scss,
-        #output=path.join(assets_out_dir, 'style_bundle.css'),
-        depends=('style/*.scss',)
-    )
-
-    css_bundle = Bundle(
-        scss_bundle,
-        #'style/datatables/jquery.dataTables.css',
-        'style/datatables/dataTables.bootstrap.css',
-        filters='autoprefixer, cssmin',
-        output=path.join(assets_out_dir, 'css_bundle.css'),
-    )
-
-    assets.register('js_bundle', js_bundle)
-    assets.register('css_bundle', css_bundle)
-
-
 def configure_db(app):
     db.init_app(app)
 
@@ -177,10 +82,3 @@ def configure_identity(app):
     @app.before_request
     def authenticate():
         g.user = getattr(g.identity, 'user', None)
-
-
-def configure_blueprints(app):
-    app.register_blueprint(supplier, url_prefix='/suppliers')
-    app.register_blueprint(product, url_prefix='/products')
-    app.register_blueprint(order, url_prefix='/orders')
-    app.register_blueprint(account, url_prefix='/accounts')
