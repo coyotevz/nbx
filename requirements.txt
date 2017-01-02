@@ -1,12 +1,6 @@
 Flask-Principal
 Flask-SQLAlchemy
-Flask-WTF
 Flask-Potion
 
 # postgresql connector
 psycopg2
-
-# assets
-Flask-Assets
-jsmin
-cssmin
