@@ -31,6 +31,7 @@ class FiscalData(db.Model):
     def cuit_is_valid(self, key, cuit):
         if not validate_cuit(cuit):
             raise ValueError('CUIT invalid')
+        return cuit
 
     @property
     def needs_cuit(self):
