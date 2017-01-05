@@ -129,7 +129,7 @@ def migrate_suppliers(s):
                                 payment_term=p.plazo,
                                 delivery_included=delivery,
                                 notes = _(notes) if notes else None)
-            if p.cuit:
+            if p.cuit or p.ingresosBrutos:
                 if validate_cuit(p.cuit):
                     fiscal = FiscalData(
                         cuit=_cuit(p.cuit),
@@ -138,10 +138,15 @@ def migrate_suppliers(s):
                     supplier.fiscal_data = fiscal
                 else:
                     print('Cuit invalido: {}, de {}'.format(p.cuit, p.nombre))
+
             if p.email:
                 email = Email(email_type='Principal',
                               email=_(p.email))
                 supplier.email.append(email)
+            if p.telefono:
+                phone = Phone(phone_type='Principal',
+                              number=_(p.telefono))
+                supplier.phone.append(phone)
             if p.fax:
                 fax = Phone(phone_type='FAX',
                             number=_(p.fax))
