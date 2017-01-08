@@ -86,9 +86,8 @@ class Document(db.Model, TimestampMixin):
         return self.total - paid
 
     def __repr__(self):
-        return "<Document '{}' of '{}' ({})>".format(self.full_desc,
-                                                     self.supplier.rz,
-                                                     self.status)
+        return "<Document '{} {}' of '{}' ({})>".format(
+                self.type, self.full_number, self.supplier.rz, self.status)
 
 
 @db.event.listens_for(Document.supplier, "set", active_history=True)
