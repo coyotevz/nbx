@@ -60,12 +60,6 @@ def configure_app(app, config=None):
             a('Access-Control-Expose-Headers', 'Link,X-Total-Count')
         return response
 
-    @app.after_request
-    def test_delay(response):
-        import time
-        #time.sleep(2)
-        return response
-
 
 def configure_db(app):
     db.init_app(app)
