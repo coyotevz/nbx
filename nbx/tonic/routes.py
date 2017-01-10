@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+    tonic.routes
+    ~~~~~~~~~~~~
+
+    Tools that build routes for resources.
+"""
+
 from types import MethodType
 
 HTTP_METHODS = ('GET', 'PUT', 'POST', 'PATCH', 'DELETE')
