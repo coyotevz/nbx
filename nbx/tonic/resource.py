@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import six
+from marshmallow_sqlalchemy import ModelSchema
 
-from utils import AttributeDict
+from .utils import AttributeDict
 
 
 class ResourceMeta(type):
@@ -40,6 +41,10 @@ class ResourceMeta(type):
         new_cls.meta = meta
         new_cls.schema = schema
 
+        if getattr(meta, "model", None):
+            options = type('Meta', (object,), {"model": meta["model"]})
+            new_cls.ma_schema = type(name.lower()+'Schema', (ModelSchema,), {"Meta": options})
+
         # TODO: add routes from namespace
 
         return new_cls
@@ -61,6 +66,7 @@ class Resource(six.with_metaclass(ResourceMeta, object)):
         exclude_routes = ()
         route_decorators = {}
 
+        model = None
         id_attribute = None         # user 'id' by default
         sort_attribute = None       # None means use id_attribute
         id_converter = None
