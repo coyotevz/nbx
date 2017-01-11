@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask_potion import fields
+from nbx.tonic import Resource, fields
+from nbx.models import FiscalData
 
-FiscalDataSchema = fields.Object({
-    'cuit': fields.String(),
-    'type': fields.String(),
-    'iibb': fields.String(),
-})
+class FiscalDataResource(Resource):
+
+    class Meta:
+        model = FiscalData
+
+    class Schema:
+        type = fields.String(dump_only=True)

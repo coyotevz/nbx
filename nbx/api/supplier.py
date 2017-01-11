@@ -7,7 +7,7 @@ from nbx.models import Supplier
 from .document import DocumentSchema
 from .misc import AddressSchema, PhoneSchema, EmailSchema, TimestampMixin
 #from .bank import BankAccountSchema
-from .fiscal import FiscalDataSchema
+#from .fiscal import FiscalDataSchema
 
 
 class SupplierResource(TimestampMixin, ModelResource):
@@ -25,7 +25,7 @@ class SupplierResource(TimestampMixin, ModelResource):
         email = fields.List(EmailSchema)
         phone = fields.List(PhoneSchema)
         #bank_accounts = fields.List(BankAccountSchema)
-        fiscal_data = FiscalDataSchema
+        #fiscal_data = FiscalDataSchema
 
     @ItemRoute.GET('/documents', rel="documents")
     def documents(self, supplier) -> fields.List(DocumentSchema):
