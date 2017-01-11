@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import six
+from marshmallow.compat import with_metaclass
 from marshmallow_sqlalchemy import ModelSchema
 
-from .utils import AttributeDict
+def _create_model_schema(schema_opts, meta_opts):
+
+    # is common pattern that resources name ends with 'Resource' word
+    name = meta_opts['name'].replace('Resource', '') + 'Schema'
+    meta = type('Meta', (object,), {'model': meta_opts['model']})
+    ns = {"Meta": meta}
+    ns.update(schema_opts)
+    schema = type(name, (ModelSchema,), ns)
+    return schema
 
 
 class ResourceMeta(type):
@@ -11,39 +19,41 @@ class ResourceMeta(type):
     def __new__(cls, name, bases, namespace):
         new_cls = super(ResourceMeta, cls).__new__(cls, name, bases, namespace)
 
-        routes = dict(getattr(new_cls, 'routes') or {})
-        meta = AttributeDict(getattr(new_cls, 'meta', {}) or {})
-        schema = {}
+        routes = dict(getattr(new_cls, 'routes', {}) or {})
+        meta_opts = {}
+        schema_opts = {}
 
         for base in bases:
             # TODO: add routes from base
 
-            if hasattr(base, 'Meta'):
-                meta.update({k: v for k, v in base.Meta.__dict__.items()
-                             if not k.startswith('__')})
-            if hasattr(base, 'Schema'):
-                schema.update(base.Schema.__dict__)
+            # FIXME: is this necessary if we are using meta_opts from new_cls??
+            meta_opts.update(getattr(base, 'meta_opts', {}) or {})
+            schema_opts.update(getattr(base, 'schema_opts', {}) or {})
 
         if 'Meta' in namespace:
-            options = namespace['Meta'].__dict__
-            meta.update({k: v for k, v in options.items()
-                         if not k.startswith('__')})
+            opts = namespace['Meta'].__dict__
+            meta_opts.update({k: v for k, v in opts.items()
+                              if not k.startswith('__')})
 
-            if not options.get('name', None):
-                meta['name'] = name.lower()
+            if not opts.get('name', None):
+                meta_opts['name'] = name
         else:
-            meta['name'] = name.lower()
+            meta_opts['name'] = name
 
         if 'Schema' in namespace:
-            schema.update(namespace['Schema'].__dict__)
+            opts = namespace['Schema'].__dict__
+            schema_opts.update({k: v for k, v in opts.items()
+                                if not k.startswith('__')})
 
         new_cls.routes = routes
-        new_cls.meta = meta
-        new_cls.schema = schema
+        new_cls.meta_opts = meta_opts
+        new_cls.schema_opts = schema_opts
 
-        if getattr(meta, "model", None):
-            options = type('Meta', (object,), {"model": meta["model"]})
-            new_cls.ma_schema = type(name.lower()+'Schema', (ModelSchema,), {"Meta": options})
+        if getattr(meta_opts, "model", None) is not None:
+            new_cls.schema_class = _create_model_schema(schema_opts, meta_opts)
+        else:
+            # TODO: create a normal ma schema
+            new_cls.schema_class = '<noset>'
 
         # TODO: add routes from namespace
 
@@ -51,12 +61,9 @@ class ResourceMeta(type):
 
 
 
-class Resource(six.with_metaclass(ResourceMeta, object)):
+class Resource(with_metaclass(ResourceMeta, object)):
 
     api = None
-    meta = None
-    routes = None
-    schema = None
     route_prefix = None
 
     class Meta:

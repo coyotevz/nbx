@@ -6,6 +6,13 @@ from flask import current_app, make_response, json, request
 from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.http import HTTP_STATUS_CODES
 
+from .resource import Resource
+
+__all__ = [
+    'Api',
+    'Resource',
+]
+
 
 class TonicException(Exception):
     werkzeug_exception = InternalServerError
